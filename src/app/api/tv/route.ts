@@ -1,43 +1,9 @@
 import { NextResponse } from "next/server";
-import https from "https";
 
 const CIVITAI_API = "https://civitai.com/api/v1/images";
 
-// Fetch that ignores SSL errors (Civitai cert issue on some networks)
-async function fetchIgnoreSSL(url: string): Promise<any> {
-  return new Promise((resolve, reject) => {
-    const parsedUrl = new URL(url);
-    const options = {
-      hostname: parsedUrl.hostname,
-      path: parsedUrl.pathname + parsedUrl.search,
-      method: "GET",
-      rejectUnauthorized: false,
-      headers: {
-        "User-Agent": "Eva/1.0",
-        Accept: "application/json",
-      },
-    };
-
-    const req = https.request(options, (res) => {
-      let data = "";
-      res.on("data", (chunk) => (data += chunk));
-      res.on("end", () => {
-        try {
-          resolve(JSON.parse(data));
-        } catch {
-          reject(new Error("Invalid JSON response"));
-        }
-      });
-    });
-
-    req.on("error", reject);
-    req.setTimeout(15000, () => {
-      req.destroy();
-      reject(new Error("Request timeout"));
-    });
-    req.end();
-  });
-}
+export const runtime = "nodejs";
+export const revalidate = 300; // кеш 5 минут
 
 export async function GET(request: Request) {
   try {
@@ -55,9 +21,27 @@ export async function GET(request: Request) {
     });
     if (cursor) params.set("cursor", cursor);
 
-    const data = await fetchIgnoreSSL(`${CIVITAI_API}?${params}`);
+    // Disable SSL verification for environments with cert issues
+    if (typeof process !== "undefined") {
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+    }
 
-    // Преобразуем в наш формат, фильтруем только SFW с промптами
+    const res = await fetch(`${CIVITAI_API}?${params}`, {
+      headers: {
+        "User-Agent": "Eva/1.0",
+        Accept: "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: `Civitai API error: ${res.status}` },
+        { status: res.status }
+      );
+    }
+
+    const data = await res.json();
+
     const items = (data.items || [])
       .filter(
         (item: any) =>
