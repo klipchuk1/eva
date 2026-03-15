@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Image as ImageIcon, Sparkles, Loader2, Download, Maximize2, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,14 @@ const textareaClass =
   "w-full rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/10 focus:bg-white/[0.07] resize-none transition-all duration-200";
 
 export default function GenerateImagePage() {
+  return (
+    <Suspense>
+      <GenerateImageContent />
+    </Suspense>
+  );
+}
+
+function GenerateImageContent() {
   const [prompt, setPrompt] = useState("");
   const [negativePrompt, setNegativePrompt] = useState("");
   const [modelId, setModelId] = useState(imageModels[0]?.id || "flux-1.1-pro");
