@@ -78,7 +78,7 @@ export default function DashboardPage() {
       {/* Welcome */}
       <div>
         <h1 className="text-2xl font-semibold text-white">
-          {profile?.display_name ? `${profile.display_name},` : ""} добро пожаловать
+          {profile?.display_name ? `${profile.display_name},` : ""} личный кабинет
         </h1>
         <p className="mt-1 text-slate-400">
           Ваш баланс:{" "}

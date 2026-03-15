@@ -16,7 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/dashboard", label: "Главная", icon: LayoutGrid },
+  { href: "/dashboard", label: "Кабинет", icon: LayoutGrid },
   { href: "/generate/image", label: "Фото", icon: Image },
   { href: "/generate/video", label: "Видео", icon: Video },
   { href: "/generate/audio", label: "Аудио", icon: Mic },
