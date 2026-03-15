@@ -100,10 +100,12 @@ export async function startGeneration(params: {
       console.log("[Generation] training_images:", persona?.training_images);
 
       if (persona && persona.training_images?.length > 0) {
-        // Get public URLs for reference images
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        // Get public URLs for reference images via Supabase SDK
         const imageUrls = persona.training_images.map((path: string) => {
-          return `${supabaseUrl}/storage/v1/object/public/training-images/${path}`;
+          const { data } = supabase.storage
+            .from("training-images")
+            .getPublicUrl(path);
+          return data.publicUrl;
         });
 
         console.log("[Generation] image URLs:", imageUrls);
