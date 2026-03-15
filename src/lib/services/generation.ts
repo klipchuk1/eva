@@ -81,11 +81,37 @@ export async function startGeneration(params: {
   // Submit to AI provider
   try {
     const client = getProviderClient(config.provider);
+
+    // If personal model is used, fetch reference images and inject into settings
+    let submitSettings = { ...params.settings };
+    let submitPrompt = params.prompt;
+    if (params.personalModelId) {
+      const { data: persona } = await supabase
+        .from("personal_models")
+        .select("name, training_images")
+        .eq("id", params.personalModelId)
+        .eq("user_id", params.userId)
+        .single();
+
+      if (persona && persona.training_images?.length > 0) {
+        // Get public URLs for reference images
+        const imageUrls = persona.training_images.map((path: string) => {
+          const { data } = supabase.storage
+            .from("training-images")
+            .getPublicUrl(path);
+          return data.publicUrl;
+        });
+        submitSettings.image_input = imageUrls;
+        // Enhance prompt to preserve the face
+        submitPrompt = `A photo of the person from the reference images. ${params.prompt}. Preserve the exact face, features, and identity from the reference photos.`;
+      }
+    }
+
     const result = await client.submit({
       apiModel: config.apiModel,
-      prompt: params.prompt,
+      prompt: submitPrompt,
       negativePrompt: params.negativePrompt,
-      settings: params.settings,
+      settings: submitSettings,
     });
 
     if (result.isSync && (result.resultBuffer || result.resultUrl)) {

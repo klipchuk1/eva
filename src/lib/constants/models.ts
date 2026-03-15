@@ -67,6 +67,16 @@ export const MODEL_REGISTRY: Record<string, ModelConfig> = {
     description: "Генерация от Google через прокси",
     maxResolution: { width: 1024, height: 1024 },
   },
+  "nano-banana-pro": {
+    provider: "replicate",
+    apiModel: "google/nano-banana-pro",
+    type: "image",
+    baseTokenCost: 8,
+    displayName: "Nano Banana Pro",
+    description: "Генерация с референсными фото, сохранение лиц",
+    supportsImageInput: true,
+    maxResolution: { width: 2048, height: 2048 },
+  },
 
   // ===== VIDEO =====
   "kling-3.0": {

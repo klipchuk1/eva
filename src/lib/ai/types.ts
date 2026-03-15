@@ -8,6 +8,7 @@ export interface ModelConfig {
   displayName: string;
   description: string;
   isNew?: boolean;
+  supportsImageInput?: boolean;
   maxResolution?: { width: number; height: number };
   maxDurationSec?: number;
 }

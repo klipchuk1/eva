@@ -33,6 +33,7 @@ export async function POST(request: Request) {
       negativePrompt: parsed.data.negativePrompt,
       modelId: parsed.data.modelId,
       settings: parsed.data.settings,
+      personalModelId: parsed.data.personalModelId,
     });
 
     return NextResponse.json(generation);

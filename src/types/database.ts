@@ -106,6 +106,9 @@ export interface PersonalModel {
   completed_at: string | null;
   created_at: string;
   updated_at: string;
+  // Reference-based fields (for Nano Banana Pro approach)
+  reference_urls?: string[];
+  avatar_url?: string | null;
 }
 
 export interface LibraryElement {

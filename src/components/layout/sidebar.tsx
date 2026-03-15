@@ -12,6 +12,7 @@ import {
   History,
   Settings,
   Tv,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +21,7 @@ const navItems = [
   { href: "/generate/image", label: "Фото", icon: Image },
   { href: "/generate/video", label: "Видео", icon: Video },
   { href: "/generate/audio", label: "Аудио", icon: Mic },
+  { href: "/models", label: "Мои модели", icon: Sparkles },
   { href: "/gallery", label: "Галерея", icon: GalleryHorizontalEnd },
   { href: "/tv", label: "ЭВА ТВ", icon: Tv },
   { href: "/tokens", label: "Токены", icon: Coins },

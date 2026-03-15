@@ -4,6 +4,7 @@ export const imageGenerationSchema = z.object({
   prompt: z.string().min(1, "Введите промпт").max(2000),
   negativePrompt: z.string().max(1000).optional(),
   modelId: z.string().min(1),
+  personalModelId: z.string().uuid().optional(),
   settings: z.object({
     width: z.number().min(256).max(2048).default(1024),
     height: z.number().min(256).max(2048).default(1024),

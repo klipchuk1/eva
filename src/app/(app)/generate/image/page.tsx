@@ -2,13 +2,14 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Image as ImageIcon, Sparkles, Loader2, Download, Maximize2, X, ChevronDown } from "lucide-react";
+import { Image as ImageIcon, Sparkles, Loader2, Download, Maximize2, X, ChevronDown, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getModelsByType } from "@/lib/constants/models";
 import { useStartGeneration, useGenerationPolling } from "@/lib/hooks/use-generation";
 import { useGenerationStore } from "@/lib/stores/generation-store";
 import { cn } from "@/lib/utils";
+import type { PersonalModel } from "@/types/database";
 
 const imageModels = getModelsByType("image");
 
@@ -39,8 +40,21 @@ function GenerateImageContent() {
   const [error, setError] = useState("");
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const [modelOpen, setModelOpen] = useState(false);
+  const [personas, setPersonas] = useState<PersonalModel[]>([]);
+  const [selectedPersona, setSelectedPersona] = useState<string | null>(null);
+  const [personaOpen, setPersonaOpen] = useState(false);
 
   const searchParams = useSearchParams();
+
+  // Load user personas
+  useEffect(() => {
+    fetch("/api/models")
+      .then((res) => res.json())
+      .then((data) => {
+        setPersonas((data.models || []).filter((m: PersonalModel) => m.status === "ready"));
+      })
+      .catch(() => {});
+  }, []);
   const startGeneration = useStartGeneration();
   const { activeGenerations } = useGenerationStore();
   useGenerationPolling();
@@ -77,10 +91,12 @@ function GenerateImageContent() {
     setLoading(true);
 
     try {
+      const effectiveModelId = selectedPersona ? "nano-banana-pro" : modelId;
       await startGeneration("image", {
         prompt,
         negativePrompt: negativePrompt || undefined,
-        modelId,
+        modelId: effectiveModelId,
+        personalModelId: selectedPersona || undefined,
         settings: {
           width: resolution.width,
           height: resolution.height,
@@ -133,11 +149,99 @@ function GenerateImageContent() {
             </CardContent>
           </Card>
 
+          {/* Persona selector */}
+          {personas.length > 0 && (
+            <Card>
+              <CardContent className="py-4 space-y-3">
+                <label className="block text-sm font-medium text-slate-300">
+                  Персона
+                </label>
+                <div className="relative">
+                  <button
+                    onClick={() => setPersonaOpen(!personaOpen)}
+                    className="w-full text-left rounded-xl border border-white/[0.08] bg-white/[0.04] p-3 transition-all duration-200 cursor-pointer hover:border-white/[0.12] flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      {selectedPersona ? (
+                        <>
+                          <div className="h-7 w-7 rounded-full bg-white/[0.06] flex items-center justify-center overflow-hidden">
+                            {(() => {
+                              const p = personas.find((m) => m.id === selectedPersona);
+                              const url = p?.training_images?.[0]
+                                ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/training-images/${p.training_images[0]}`
+                                : null;
+                              return url ? (
+                                <img src={url} alt="" className="h-full w-full object-cover" />
+                              ) : (
+                                <User className="h-4 w-4 text-slate-500" />
+                              );
+                            })()}
+                          </div>
+                          <span className="text-sm font-medium text-white">
+                            {personas.find((m) => m.id === selectedPersona)?.name}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-sm text-slate-500">Без персоны</span>
+                      )}
+                    </div>
+                    <ChevronDown className={cn("h-4 w-4 text-slate-400 transition-transform", personaOpen && "rotate-180")} />
+                  </button>
+                  {personaOpen && (
+                    <div className="absolute z-20 bottom-full mb-1 w-full rounded-xl border border-white/[0.08] bg-[#0f1320] backdrop-blur-xl shadow-xl overflow-auto max-h-48">
+                      <button
+                        onClick={() => { setSelectedPersona(null); setPersonaOpen(false); }}
+                        className={cn(
+                          "w-full text-left px-3 py-2.5 transition-all cursor-pointer",
+                          !selectedPersona ? "bg-amber-500/[0.08] text-amber-400" : "text-slate-400 hover:bg-white/[0.06]"
+                        )}
+                      >
+                        <span className="text-sm">Без персоны</span>
+                      </button>
+                      {personas.map((p) => {
+                        const avatarUrl = p.training_images?.[0]
+                          ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/training-images/${p.training_images[0]}`
+                          : null;
+                        return (
+                          <button
+                            key={p.id}
+                            onClick={() => { setSelectedPersona(p.id); setPersonaOpen(false); }}
+                            className={cn(
+                              "w-full text-left px-3 py-2.5 transition-all cursor-pointer flex items-center gap-2.5",
+                              selectedPersona === p.id ? "bg-amber-500/[0.08] text-amber-400" : "text-white hover:bg-white/[0.06]"
+                            )}
+                          >
+                            <div className="h-6 w-6 rounded-full bg-white/[0.06] overflow-hidden shrink-0">
+                              {avatarUrl ? (
+                                <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+                              ) : (
+                                <div className="h-full w-full flex items-center justify-center">
+                                  <User className="h-3.5 w-3.5 text-slate-500" />
+                                </div>
+                              )}
+                            </div>
+                            <span className="text-sm font-medium">{p.name}</span>
+                            <span className="text-xs text-slate-500 ml-auto">{p.training_images_count} фото</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+                {selectedPersona && (
+                  <p className="text-xs text-amber-400/80">
+                    Будет использована модель Nano Banana Pro с референсными фото
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           {/* Model */}
           <Card>
             <CardContent className="py-4 space-y-3">
               <label className="block text-sm font-medium text-slate-300">
-                Модель
+                Модель{selectedPersona && <span className="text-xs text-slate-500 ml-2">(авто: Nano Banana Pro)</span>}
               </label>
               <div className="relative">
                 <button
