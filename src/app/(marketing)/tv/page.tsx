@@ -43,6 +43,7 @@ export default function TvPage() {
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [promptExpanded, setPromptExpanded] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef<number>(Date.now());
@@ -50,9 +51,9 @@ export default function TvPage() {
   const fetchItems = useCallback(async (cursor?: string) => {
     try {
       const params = new URLSearchParams({
-        limit: "30",
+        limit: "50",
         sort: "Most Reactions",
-        period: "Week",
+        period: "Month",
       });
       if (cursor) params.set("cursor", cursor);
 
@@ -72,17 +73,21 @@ export default function TvPage() {
     fetchItems();
   }, [fetchItems]);
 
-  // Preload next image
+  // Preload next image & load more when nearing end
   useEffect(() => {
     if (items.length > 0 && currentIndex < items.length - 1) {
       const img = new Image();
       img.src = items[currentIndex + 1].url;
     }
-    // Load more when nearing end
-    if (currentIndex >= items.length - 5 && nextCursor) {
+    // Load more when 10 items left
+    if (currentIndex >= items.length - 10 && nextCursor) {
       fetchItems(nextCursor);
     }
-  }, [currentIndex, items, nextCursor, fetchItems]);
+    // If we went past the end, clamp
+    if (currentIndex >= items.length && items.length > 0) {
+      setCurrentIndex(items.length - 1);
+    }
+  }, [currentIndex, items.length, nextCursor, fetchItems]);
 
   // Auto-advance timer
   useEffect(() => {
@@ -98,7 +103,7 @@ export default function TvPage() {
     }, 50);
 
     timerRef.current = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % items.length);
+      setCurrentIndex((prev) => prev + 1);
       setImageLoaded(false);
     }, SLIDE_DURATION);
 
@@ -109,14 +114,16 @@ export default function TvPage() {
   }, [playing, items.length, currentIndex]);
 
   function goNext() {
-    setCurrentIndex((prev) => (prev + 1) % items.length);
+    setCurrentIndex((prev) => Math.min(prev + 1, items.length - 1));
     setImageLoaded(false);
+    setPromptExpanded(false);
     startTimeRef.current = Date.now();
   }
 
   function goPrev() {
-    setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
     setImageLoaded(false);
+    setPromptExpanded(false);
     startTimeRef.current = Date.now();
   }
 
@@ -204,18 +211,15 @@ export default function TvPage() {
           >
             <ArrowLeft className="h-4 w-4" />
           </Link>
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 to-amber-600">
               <span className="text-[10px] font-bold text-gray-950">E</span>
             </div>
             <span className="text-white font-semibold text-sm">ЭВА ТВ</span>
-          </div>
+          </Link>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-white/40 text-xs">
-            {currentIndex + 1} / {items.length}
-          </span>
           <Link
             href={current ? `/generate/image?prompt=${encodeURIComponent(current.prompt)}` : "/generate/image"}
             className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-b from-amber-400 to-amber-500 px-4 py-2 text-xs font-semibold text-gray-950 hover:from-amber-300 hover:to-amber-400 transition-all shadow-[0_0_16px_rgba(245,158,11,0.25)]"
@@ -227,86 +231,97 @@ export default function TvPage() {
       </div>
 
       {/* Bottom controls + prompt */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+      <div
+        className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
+        onMouseDown={() => setPlaying(false)}
+        onMouseUp={() => setPlaying(true)}
+      >
         {/* Prompt area */}
         {showPrompt && (
-          <div className="px-6 pb-2 max-w-4xl">
-            <div className="flex items-center gap-2 mb-2">
+          <div className="px-6 pb-3 max-w-4xl mx-auto text-center">
+            <div className="flex items-center justify-center gap-2 mb-1.5">
               <span className="px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-500/30 text-amber-400 text-[10px] font-semibold uppercase tracking-wider">
                 {current.model}
               </span>
               <span className="text-white/30 text-xs">
                 by {current.username}
               </span>
-              {current.hearts > 0 && (
-                <span className="flex items-center gap-1 text-white/30 text-xs">
-                  <Heart className="h-3 w-3" /> {current.hearts}
-                </span>
-              )}
             </div>
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(current.prompt);
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000);
-              }}
-              className="text-left text-white/80 text-sm leading-relaxed line-clamp-3 hover:text-white transition-colors cursor-pointer group/prompt flex items-start gap-2"
-            >
-              <span className="flex-1">{current.prompt}</span>
-              <span className="shrink-0 mt-0.5 opacity-0 group-hover/prompt:opacity-100 transition-opacity">
-                {copied ? (
-                  <Check className="h-3.5 w-3.5 text-emerald-400" />
-                ) : (
-                  <Copy className="h-3.5 w-3.5 text-white/50" />
+            <div className="flex flex-col items-center gap-1">
+              <p className="text-white/60 text-xs leading-relaxed max-w-[600px]">
+                {promptExpanded || current.prompt.length <= 80
+                  ? current.prompt
+                  : current.prompt.slice(0, 80) + "..."}
+              </p>
+              <div className="flex items-center gap-2">
+                {current.prompt.length > 80 && (
+                  <button
+                    onClick={() => setPromptExpanded((v) => !v)}
+                    className="text-amber-400/70 text-[10px] hover:text-amber-400 transition-colors cursor-pointer"
+                  >
+                    {promptExpanded ? "Скрыть" : "Показать всё"}
+                  </button>
                 )}
-              </span>
-            </button>
-            {copied && (
-              <p className="text-[10px] text-emerald-400 mt-1">Промпт скопирован!</p>
-            )}
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(current.prompt);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  className="inline-flex items-center gap-1 text-white/40 text-[10px] hover:text-white transition-colors cursor-pointer"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="h-3 w-3 text-emerald-400" />
+                      <span className="text-emerald-400">Скопировано</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3 w-3" />
+                      <span>Копировать</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Controls */}
-        <div className="px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={goPrev}
-              className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-white hover:bg-white/20 transition-colors cursor-pointer"
-            >
-              <SkipBack className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => setPlaying((p) => !p)}
-              className="p-3 rounded-xl bg-white/20 backdrop-blur-sm border border-white/15 text-white hover:bg-white/30 transition-colors cursor-pointer"
-            >
-              {playing ? (
-                <Pause className="h-5 w-5" />
-              ) : (
-                <Play className="h-5 w-5 ml-0.5" />
-              )}
-            </button>
-            <button
-              onClick={goNext}
-              className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-white hover:bg-white/20 transition-colors cursor-pointer"
-            >
-              <SkipForward className="h-4 w-4" />
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowPrompt((s) => !s)}
-              className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-white hover:bg-white/20 transition-colors cursor-pointer"
-              title={showPrompt ? "Скрыть промпт" : "Показать промпт"}
-            >
-              {showPrompt ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-            </button>
-          </div>
+        {/* Controls — centered */}
+        <div className="px-6 py-4 flex items-center justify-center gap-3">
+          <button
+            onClick={goPrev}
+            className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-white hover:bg-white/20 transition-colors cursor-pointer"
+          >
+            <SkipBack className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => setPlaying((p) => !p)}
+            className="p-3 rounded-xl bg-white/20 backdrop-blur-sm border border-white/15 text-white hover:bg-white/30 transition-colors cursor-pointer"
+          >
+            {playing ? (
+              <Pause className="h-5 w-5" />
+            ) : (
+              <Play className="h-5 w-5 ml-0.5" />
+            )}
+          </button>
+          <button
+            onClick={goNext}
+            className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-white hover:bg-white/20 transition-colors cursor-pointer"
+          >
+            <SkipForward className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => setShowPrompt((s) => !s)}
+            className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-white hover:bg-white/20 transition-colors cursor-pointer"
+            title={showPrompt ? "Скрыть промпт" : "Показать промпт"}
+          >
+            {showPrompt ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+          </button>
         </div>
       </div>
 

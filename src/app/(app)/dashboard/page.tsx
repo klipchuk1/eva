@@ -58,11 +58,12 @@ export default function DashboardPage() {
 
       if (data) setProfile(data);
 
-      // Sum tokens spent on generations
+      // Sum tokens spent — only completed generations (failed ones get refunded)
       const { data: genData } = await supabase
         .from("generations")
         .select("token_cost")
-        .eq("user_id", user.id);
+        .eq("user_id", user.id)
+        .eq("status", "completed");
 
       if (genData) {
         const spent = genData.reduce((sum, g) => sum + (g.token_cost || 0), 0);
