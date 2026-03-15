@@ -85,25 +85,32 @@ export async function startGeneration(params: {
     // If personal model is used, fetch reference images and inject into settings
     let submitSettings = { ...params.settings };
     let submitPrompt = params.prompt;
+
+    console.log("[Generation] personalModelId:", params.personalModelId);
+
     if (params.personalModelId) {
-      const { data: persona } = await supabase
+      const { data: persona, error: personaError } = await supabase
         .from("personal_models")
-        .select("name, training_images")
+        .select("name, training_images, training_images_count")
         .eq("id", params.personalModelId)
         .eq("user_id", params.userId)
         .single();
 
+      console.log("[Generation] persona found:", !!persona, "error:", personaError?.message);
+      console.log("[Generation] training_images:", persona?.training_images);
+
       if (persona && persona.training_images?.length > 0) {
         // Get public URLs for reference images
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
         const imageUrls = persona.training_images.map((path: string) => {
-          const { data } = supabase.storage
-            .from("training-images")
-            .getPublicUrl(path);
-          return data.publicUrl;
+          return `${supabaseUrl}/storage/v1/object/public/training-images/${path}`;
         });
+
+        console.log("[Generation] image URLs:", imageUrls);
+
         submitSettings.image_input = imageUrls;
         // Enhance prompt to preserve the face
-        submitPrompt = `A photo of the person from the reference images. ${params.prompt}. Preserve the exact face, features, and identity from the reference photos.`;
+        submitPrompt = `A photo of the person shown in the reference images. ${params.prompt}. Keep the exact same face and identity from the reference photos.`;
       }
     }
 

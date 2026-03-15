@@ -17,7 +17,9 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
+    console.log("[API /generate/image] body.personalModelId:", body.personalModelId);
     const parsed = imageGenerationSchema.safeParse(body);
+    console.log("[API /generate/image] parsed personalModelId:", parsed.success ? parsed.data.personalModelId : "parse failed");
 
     if (!parsed.success) {
       return NextResponse.json(
