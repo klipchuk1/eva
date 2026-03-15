@@ -1,0 +1,35 @@
+export const TOKEN_PACKAGES = [
+  {
+    id: "starter",
+    name: "Стартовый",
+    tokens: 500,
+    bonusTokens: 0,
+    priceRub: 500,
+    perToken: 1.0,
+  },
+  {
+    id: "basic",
+    name: "Базовый",
+    tokens: 2000,
+    bonusTokens: 200,
+    priceRub: 1800,
+    perToken: 0.82,
+    popular: true,
+  },
+  {
+    id: "pro",
+    name: "Про",
+    tokens: 5000,
+    bonusTokens: 1000,
+    priceRub: 4000,
+    perToken: 0.67,
+  },
+  {
+    id: "ultra",
+    name: "Ультра",
+    tokens: 15000,
+    bonusTokens: 5000,
+    priceRub: 10000,
+    perToken: 0.5,
+  },
+] as const;
