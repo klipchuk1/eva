@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ЭВА — Операционный план достижения 500 000₽ чистой прибыли</title>
+<style>
+  @page {
+    size: A4;
+    margin: 20mm 15mm;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0e1a;
+    color: #e0e0e0;
+    font-size: 13px;
+    line-height: 1.55;
+    padding: 0;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 25mm 20mm;
+    background: #0a0e1a;
+    page-break-after: always;
+  }
+
+  .page:last-child {
+    page-break-after: auto;
+  }
+
+  /* ── Title page ── */
+  .title-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 257mm;
+  }
+
+  .title-page .logo {
+    font-size: 72px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #f5c842, #e8a020, #f5c842);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 12px;
+    margin-bottom: 30px;
+  }
+
+  .title-page h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #ffffff;
+    max-width: 500px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+
+  .title-page .subtitle {
+    font-size: 16px;
+    color: #f5c842;
+    font-weight: 500;
+    margin-bottom: 40px;
+  }
+
+  .title-page .meta {
+    color: #888;
+    font-size: 13px;
+  }
+
+  .title-page .divider-line {
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #f5c842, transparent);
+    margin: 25px auto;
+  }
+
+  .title-page .badge {
+    display: inline-block;
+    border: 1px solid #f5c84266;
+    color: #f5c842;
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 10px;
+  }
+
+  /* ── Headings ── */
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f5c842;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f5c84233;
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 20px 0 10px 0;
+  }
+
+  h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #cccccc;
+    margin: 14px 0 8px 0;
+  }
+
+  p {
+    margin-bottom: 10px;
+    color: #c0c0c0;
+  }
+
+  strong {
+    color: #ffffff;
+  }
+
+  /* ── Section numbers ── */
+  .section-num {
+    display: inline-block;
+    background: #f5c842;
+    color: #0a0e1a;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 28px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 18px 0;
+    font-size: 12px;
+  }
+
+  th {
+    background: #151b2e;
+    color: #f5c842;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #f5c84244;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #1a2035;
+    color: #d0d0d0;
+  }
+
+  tr:nth-child(even) td {
+    background: #0d1224;
+  }
+
+  tr:hover td {
+    background: #151b2e;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  /* ── Colour indicators ── */
+  .green  { color: #4caf50; }
+  .red    { color: #ef5350; }
+  .yellow { color: #ffc107; }
+  .gold   { color: #f5c842; }
+  .white  { color: #ffffff; }
+
+  .bg-green  { background: #4caf5022; }
+  .bg-red    { background: #ef535022; }
+  .bg-yellow { background: #ffc10722; }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill-green  { background: #4caf5030; color: #4caf50; }
+  .pill-red    { background: #ef535030; color: #ef5350; }
+  .pill-yellow { background: #ffc10730; color: #ffc107; }
+  .pill-gold   { background: #f5c84230; color: #f5c842; }
+
+  /* ── Cards ── */
+  .card {
+    background: #111827;
+    border: 1px solid #1e2a45;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 12px 0;
+  }
+
+  .card-row {
+    display: flex;
+    gap: 12px;
+    margin: 12px 0;
+  }
+
+  .card-row .card {
+    flex: 1;
+    margin: 0;
+  }
+
+  .card .big-num {
+    font-size: 28px;
+    font-weight: 800;
+    color: #f5c842;
+    line-height: 1.1;
+  }
+
+  .card .label {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  /* ── Separator ── */
+  .sep {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #f5c84233, transparent);
+    margin: 24px 0;
+  }
+
+  /* ── Lists ── */
+  ul, ol {
+    margin: 8px 0 12px 20px;
+    color: #c0c0c0;
+  }
+
+  li {
+    margin-bottom: 5px;
+  }
+
+  /* ── Flow arrow ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+  }
+
+  .flow-item {
+    background: #111827;
+    border: 1px solid #1e2a45;
+    border-radius: 6px;
+    padding: 8px 14px;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .flow-item .num {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f5c842;
+  }
+
+  .flow-arrow {
+    color: #f5c842;
+    font-size: 18px;
+  }
+
+  /* ── Risk matrix ── */
+  .risk-high   { border-left: 4px solid #ef5350; }
+  .risk-med    { border-left: 4px solid #ffc107; }
+  .risk-low    { border-left: 4px solid #4caf50; }
+
+  /* ── Checklist ── */
+  .check-item {
+    padding: 6px 0 6px 24px;
+    position: relative;
+    border-bottom: 1px solid #1a2035;
+  }
+  .check-item::before {
+    content: "\2610";
+    position: absolute;
+    left: 0;
+    color: #f5c842;
+    font-size: 15px;
+  }
+
+  /* ── KPI table highlights ── */
+  .kpi-target { font-weight: 700; color: #f5c842; }
+
+  /* ── Footnote ── */
+  .footnote {
+    font-size: 11px;
+    color: #666;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #1a2035;
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: #0a0e1a; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page { margin: 0; padding: 15mm; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- ТИТУЛЬНАЯ СТРАНИЦА                                 -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="title-page">
+    <div class="logo">ЭВА</div>
+    <h1>Операционный план достижения 500 000₽ чистой прибыли</h1>
+    <div class="divider-line"></div>
+    <div class="subtitle">Горизонт: 60 дней</div>
+    <p class="meta">Март 2026 &mdash; Версия 1.0</p>
+    <p class="meta" style="margin-top:6px;">AI-платформа генерации фото, видео и аудио</p>
+    <div style="margin-top:40px;">
+      <span class="badge">Конфиденциально</span>
+    </div>
+    <div style="margin-top:60px; color:#555; font-size:12px;">
+      <p>Стек: Next.js 16 &bull; Supabase &bull; Vercel</p>
+      <p>Дата составления: 15 марта 2026</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- РАЗДЕЛ 1: ОБРАТНЫЙ РАСЧЁТ ОТ ЦЕЛИ                 -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">1</span> Обратный расчёт от цели</h2>
+
+  <h3>1.1 Целевая декомпозиция</h3>
+  <p>Отправная точка &mdash; <strong>500 000₽ чистой прибыли</strong> за 60 дней. Рассчитаем обратным ходом все необходимые метрики.</p>
+
+  <div class="card">
+    <table>
+      <tr><td>Целевая чистая прибыль</td><td class="text-right"><strong class="gold">500 000 ₽</strong></td></tr>
+      <tr><td>+ Постоянные расходы (2 мес &times; 5 000₽)</td><td class="text-right">10 000 ₽</td></tr>
+      <tr><td>+ Маркетинговый бюджет (см. раздел 3)</td><td class="text-right">80 000 ₽</td></tr>
+      <tr><td>+ ФОТ (фрилансеры, см. раздел 4)</td><td class="text-right">30 000 ₽</td></tr>
+      <tr><td>= <strong>Необходимая валовая прибыль</strong></td><td class="text-right"><strong class="gold">620 000 ₽</strong></td></tr>
+      <tr><td>При средневзвешенной марже ~60%: необходимая выручка</td><td class="text-right"><strong class="white">1 033 000 ₽</strong></td></tr>
+      <tr><td>Переменные расходы (API, 40% от выручки)</td><td class="text-right">413 000 ₽</td></tr>
+    </table>
+  </div>
+
+  <p><strong>Проверка:</strong> Выручка 1 033 000 &minus; API 413 000 = Валовая 620 000 &minus; Пост.расходы 10 000 &minus; Маркетинг 80 000 &minus; ФОТ 30 000 = <span class="gold"><strong>500 000₽ чистой прибыли</strong></span>.</p>
+
+  <h3>1.2 Сколько платящих пользователей нужно</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Сценарий ср. чека</th>
+        <th class="text-right">Средний чек</th>
+        <th class="text-right">Платящих за 2 мес</th>
+        <th class="text-right">В месяц (ср.)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Консервативный</td>
+        <td class="text-right">1 200₽</td>
+        <td class="text-right">861</td>
+        <td class="text-right">~430</td>
+      </tr>
+      <tr>
+        <td><strong>Базовый (рабочий)</strong></td>
+        <td class="text-right"><strong>1 500₽</strong></td>
+        <td class="text-right"><strong>689</strong></td>
+        <td class="text-right"><strong>~345</strong></td>
+      </tr>
+      <tr>
+        <td>Оптимистичный</td>
+        <td class="text-right">2 000₽</td>
+        <td class="text-right">517</td>
+        <td class="text-right">~258</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Берём <strong>базовый сценарий</strong>: средний чек 1 500₽ (микс пакетов «Оптимальный» и «Студия»), нужно <strong>~690 уникальных платящих пользователей</strong> за 2 месяца.</p>
+
+  <h3>1.3 Воронка: от трафика до оплаты</h3>
+
+  <div class="flow">
+    <div class="flow-item"><div class="num">55 000</div>Визиты на лендинг</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-item"><div class="num">6 900</div>Регистрации<br><span style="color:#888;font-size:11px;">конв. 12.5%</span></div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-item"><div class="num">3 450</div>Активации (3+ ген.)<br><span style="color:#888;font-size:11px;">50% от рег.</span></div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-item"><div class="num">690</div>Платящих<br><span style="color:#888;font-size:11px;">конв. 10% от рег.</span></div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-item"><div class="num gold">1 033 000₽</div>Выручка<br><span style="color:#888;font-size:11px;">ср.чек 1 500₽</span></div>
+  </div>
+
+  <p>Конверсия лендинг &rarr; регистрация: <strong>12.5%</strong> (между 10-15%, реалистично для AI-сервиса с демо).<br>
+  Конверсия регистрация &rarr; оплата: <strong>10%</strong> (при наличии бесплатных пробных генераций).</p>
+
+  <h3>1.4 Помесячная разбивка</h3>
+
+  <p>Первый месяц &mdash; раскачка и органика. Второй &mdash; платный трафик и реферальная программа на полную мощность.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Метрика</th>
+        <th class="text-right">Месяц 1</th>
+        <th class="text-right">Месяц 2</th>
+        <th class="text-right">Итого</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Визиты на лендинг</td><td class="text-right">15 000</td><td class="text-right">40 000</td><td class="text-right">55 000</td></tr>
+      <tr><td>Регистрации</td><td class="text-right">1 900</td><td class="text-right">5 000</td><td class="text-right">6 900</td></tr>
+      <tr><td>Активации</td><td class="text-right">950</td><td class="text-right">2 500</td><td class="text-right">3 450</td></tr>
+      <tr><td>Платящих</td><td class="text-right">190</td><td class="text-right">500</td><td class="text-right">690</td></tr>
+      <tr><td>Выручка</td><td class="text-right">285 000₽</td><td class="text-right">748 000₽</td><td class="text-right"><strong class="gold">1 033 000₽</strong></td></tr>
+      <tr><td>Чистая прибыль (накопит.)</td><td class="text-right">120 000₽</td><td class="text-right">500 000₽</td><td class="text-right"><strong class="gold">500 000₽</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="footnote">Примечание: рост от месяца 1 к месяцу 2 &times;2.6 обусловлен запуском платной рекламы и эффектом сарафанного радио. Повторные покупки оценены в 20% от платящих М1.</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- РАЗДЕЛ 2: ФИНАНСОВАЯ МОДЕЛЬ                        -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">2</span> Финансовая модель</h2>
+
+  <h3>2.1 P&amp;L помесячно</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Статья</th>
+        <th class="text-right">Месяц 1</th>
+        <th class="text-right">Месяц 2</th>
+        <th class="text-right">Итого</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#111827;">
+        <td><strong>Выручка</strong></td>
+        <td class="text-right"><strong>285 000 ₽</strong></td>
+        <td class="text-right"><strong>748 000 ₽</strong></td>
+        <td class="text-right"><strong class="gold">1 033 000 ₽</strong></td>
+      </tr>
+      <tr>
+        <td>&nbsp;&nbsp;Пакет «Старт» (490₽) &mdash; 25%</td>
+        <td class="text-right">71 250</td>
+        <td class="text-right">187 000</td>
+        <td class="text-right">258 250</td>
+      </tr>
+      <tr>
+        <td>&nbsp;&nbsp;Пакет «Оптимальный» (1 490₽) &mdash; 40%</td>
+        <td class="text-right">114 000</td>
+        <td class="text-right">299 200</td>
+        <td class="text-right">413 200</td>
+      </tr>
+      <tr>
+        <td>&nbsp;&nbsp;Пакет «Про» (2 990₽) &mdash; 10%</td>
+        <td class="text-right">28 500</td>
+        <td class="text-right">74 800</td>
+        <td class="text-right">103 300</td>
+      </tr>
+      <tr>
+        <td>&nbsp;&nbsp;Пакет «Студия» (4 990₽) &mdash; 25%</td>
+        <td class="text-right">71 250</td>
+        <td class="text-right">187 000</td>
+        <td class="text-right">258 250</td>
+      </tr>
+      <tr class="bg-red">
+        <td><strong>Себестоимость (API)</strong></td>
+        <td class="text-right red">−114 000 ₽</td>
+        <td class="text-right red">−299 200 ₽</td>
+        <td class="text-right red">−413 200 ₽</td>
+      </tr>
+      <tr style="background:#111827;">
+        <td><strong>Валовая прибыль</strong></td>
+        <td class="text-right"><strong>171 000 ₽</strong></td>
+        <td class="text-right"><strong>448 800 ₽</strong></td>
+        <td class="text-right"><strong class="green">619 800 ₽</strong></td>
+      </tr>
+      <tr>
+        <td>Валовая маржа</td>
+        <td class="text-right">60%</td>
+        <td class="text-right">60%</td>
+        <td class="text-right">60%</td>
+      </tr>
+      <tr><td colspan="4" style="height:4px;background:#f5c84222;padding:0;"></td></tr>
+      <tr><td><strong>Операционные расходы:</strong></td><td></td><td></td><td></td></tr>
+      <tr>
+        <td>&nbsp;&nbsp;Хостинг (Vercel + Supabase + CDN)</td>
+        <td class="text-right">5 000</td>
+        <td class="text-right">8 000</td>
+        <td class="text-right">13 000</td>
+      </tr>
+      <tr>
+        <td>&nbsp;&nbsp;Маркетинг и реклама</td>
+        <td class="text-right">10 000</td>
+        <td class="text-right">70 000</td>
+        <td class="text-right">80 000</td>
+      </tr>
+      <tr>
+        <td>&nbsp;&nbsp;ФОТ (фрилансеры)</td>
+        <td class="text-right">10 000</td>
+        <td class="text-right">20 000</td>
+        <td class="text-right">30 000</td>
+      </tr>
+      <tr>
+        <td>&nbsp;&nbsp;Эквайринг ЮKassa (~3.5%)</td>
+        <td class="text-right">9 975</td>
+        <td class="text-right">26 180</td>
+        <td class="text-right">36 155</td>
+      </tr>
+      <tr class="bg-red">
+        <td><strong>Итого OPEX</strong></td>
+        <td class="text-right red">−34 975 ₽</td>
+        <td class="text-right red">−124 180 ₽</td>
+        <td class="text-right red">−159 155 ₽</td>
+      </tr>
+      <tr><td colspan="4" style="height:4px;background:#f5c84222;padding:0;"></td></tr>
+      <tr style="background:#111827;">
+        <td><strong style="font-size:14px;">ЧИСТАЯ ПРИБЫЛЬ</strong></td>
+        <td class="text-right"><strong class="gold" style="font-size:14px;">136 025 ₽</strong></td>
+        <td class="text-right"><strong class="gold" style="font-size:14px;">324 620 ₽</strong></td>
+        <td class="text-right"><strong class="gold" style="font-size:16px;">460 645 ₽</strong></td>
+      </tr>
+      <tr>
+        <td>Рентабельность чистая</td>
+        <td class="text-right">47.7%</td>
+        <td class="text-right">43.4%</td>
+        <td class="text-right">44.6%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><span class="pill pill-yellow">ВНИМАНИЕ</span> Базовая модель даёт ~460 000₽. Для достижения <strong>500 000₽</strong> необходимо: (а) поднять средний чек до 1 600₽, или (б) увеличить платящих до 720, или (в) снизить маркетинг на 10 000₽. При оптимистичной конверсии 12% (вместо 10%) цель достигается с запасом.</p>
+
+  <h3>2.2 Себестоимость по моделям (при миксе 70/25/5)</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Модель</th>
+        <th class="text-right">Доля генераций</th>
+        <th class="text-right">Себест./ген.</th>
+        <th class="text-right">Выручка/ген. (0.75₽/tk)</th>
+        <th class="text-right">Маржа</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Gemini (фото)</td><td class="text-right">25%</td><td class="text-right">0.10₽</td><td class="text-right">2.25₽</td><td class="text-right"><span class="green">95%</span></td></tr>
+      <tr><td>Flux 1.1 Pro (фото)</td><td class="text-right">30%</td><td class="text-right">0.30₽</td><td class="text-right">3.75₽</td><td class="text-right"><span class="green">92%</span></td></tr>
+      <tr><td>Seedream 4.5 (фото)</td><td class="text-right">15%</td><td class="text-right">1.00₽</td><td class="text-right">7.50₽</td><td class="text-right"><span class="green">87%</span></td></tr>
+      <tr><td>Veo 3.1 (видео)</td><td class="text-right">10%</td><td class="text-right">35₽</td><td class="text-right">60₽</td><td class="text-right"><span class="yellow">42%</span></td></tr>
+      <tr><td>Kling 3.0 (видео)</td><td class="text-right">5%</td><td class="text-right">35₽</td><td class="text-right">37.50₽</td><td class="text-right"><span class="red">7%</span></td></tr>
+      <tr><td>Sora 2 Pro (видео)</td><td class="text-right">10%</td><td class="text-right">50₽</td><td class="text-right">75₽</td><td class="text-right"><span class="yellow">33%</span></td></tr>
+      <tr><td>ElevenLabs TTS</td><td class="text-right">5%</td><td class="text-right">8₽</td><td class="text-right">11.25₽</td><td class="text-right"><span class="yellow">29%</span></td></tr>
+    </tbody>
+  </table>
+
+  <p><span class="pill pill-red">ВАЖНО</span> Kling 3.0 маржинальность всего 7%. Стратегия: <strong>использовать как «витрину»</strong> (привлекает пользователей), но поощрять использование Veo/Sora через UX-подсказки. Рассмотреть повышение до 60 tk за генерацию.</p>
+
+  <h3>2.3 Cash flow по неделям</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Неделя</th>
+        <th class="text-right">Выручка</th>
+        <th class="text-right">Расходы</th>
+        <th class="text-right">Денежный поток</th>
+        <th class="text-right">Накопительно</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Неделя 1</td><td class="text-right">15 000</td><td class="text-right">12 000</td><td class="text-right green">+3 000</td><td class="text-right">3 000</td></tr>
+      <tr><td>Неделя 2</td><td class="text-right">35 000</td><td class="text-right">18 000</td><td class="text-right green">+17 000</td><td class="text-right">20 000</td></tr>
+      <tr><td>Неделя 3</td><td class="text-right">80 000</td><td class="text-right">32 000</td><td class="text-right green">+48 000</td><td class="text-right">68 000</td></tr>
+      <tr><td>Неделя 4</td><td class="text-right">155 000</td><td class="text-right">56 000</td><td class="text-right green">+99 000</td><td class="text-right">167 000</td></tr>
+      <tr><td>Неделя 5</td><td class="text-right">140 000</td><td class="text-right">65 000</td><td class="text-right green">+75 000</td><td class="text-right">242 000</td></tr>
+      <tr><td>Неделя 6</td><td class="text-right">170 000</td><td class="text-right">78 000</td><td class="text-right green">+92 000</td><td class="text-right">334 000</td></tr>
+      <tr><td>Неделя 7</td><td class="text-right">200 000</td><td class="text-right">90 000</td><td class="text-right green">+110 000</td><td class="text-right">444 000</td></tr>
+      <tr><td>Неделя 8</td><td class="text-right">238 000</td><td class="text-right">97 000</td><td class="text-right green">+141 000</td><td class="text-right"><strong class="gold">585 000</strong></td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Точка безубыточности:</strong> <span class="pill pill-green">День 3-5</span> &mdash; при первых 10 продажах пакета «Старт» постоянные расходы уже покрываются. Маржинальность бизнеса высокая, точка безубыточности достигается практически сразу при наличии хотя бы минимального потока платящих.</p>
+
+  <div class="footnote">Cash flow учитывает задержку вывода ЮKassa ~2 рабочих дня. Выплаты по API &mdash; в конце месяца. Это создаёт положительный разрыв в пользу компании.</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- РАЗДЕЛ 3: МАРКЕТИНГОВЫЙ ПЛАН                       -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">3</span> Маркетинговый план</h2>
+
+  <h3>3.1 Бюджет</h3>
+
+  <div class="card-row">
+    <div class="card">
+      <div class="label">Недели 1-2</div>
+      <div class="big-num">0 ₽</div>
+      <p style="margin-top:6px;font-size:11px;color:#888;">Только органика: vc.ru, Telegram, YouTube Shorts</p>
+    </div>
+    <div class="card">
+      <div class="label">Недели 3-4</div>
+      <div class="big-num">10 000 ₽</div>
+      <p style="margin-top:6px;font-size:11px;color:#888;">Пробный запуск Яндекс.Директ</p>
+    </div>
+    <div class="card">
+      <div class="label">Недели 5-8</div>
+      <div class="big-num">70 000 ₽</div>
+      <p style="margin-top:6px;font-size:11px;color:#888;">Масштабирование Директ + VK Ads + Telegram Ads</p>
+    </div>
+  </div>
+
+  <h3>3.2 Каналы привлечения</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Канал</th>
+        <th class="text-right">Бюджет</th>
+        <th class="text-right">CPC / CPV</th>
+        <th class="text-right">Конв. в рег.</th>
+        <th class="text-right">Регистрации</th>
+        <th class="text-right">Платящих</th>
+        <th class="text-right">CAC</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>vc.ru статьи</strong> (3-4 статьи)</td>
+        <td class="text-right green">0 ₽</td>
+        <td class="text-right">&mdash;</td>
+        <td class="text-right">15%</td>
+        <td class="text-right">600</td>
+        <td class="text-right">60</td>
+        <td class="text-right green">0 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Telegram посев</strong> (чаты, каналы)</td>
+        <td class="text-right green">0 ₽</td>
+        <td class="text-right">&mdash;</td>
+        <td class="text-right">10%</td>
+        <td class="text-right">800</td>
+        <td class="text-right">80</td>
+        <td class="text-right green">0 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>YouTube Shorts</strong> (20+ роликов)</td>
+        <td class="text-right green">0 ₽</td>
+        <td class="text-right">&mdash;</td>
+        <td class="text-right">8%</td>
+        <td class="text-right">500</td>
+        <td class="text-right">50</td>
+        <td class="text-right green">0 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Реферальная программа</strong></td>
+        <td class="text-right">~5 000 ₽ *</td>
+        <td class="text-right">&mdash;</td>
+        <td class="text-right">25%</td>
+        <td class="text-right">1 000</td>
+        <td class="text-right">150</td>
+        <td class="text-right green">33 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Яндекс.Директ</strong></td>
+        <td class="text-right">40 000 ₽</td>
+        <td class="text-right">25₽</td>
+        <td class="text-right">14%</td>
+        <td class="text-right">2 240</td>
+        <td class="text-right">224</td>
+        <td class="text-right yellow">179 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>VK Ads</strong></td>
+        <td class="text-right">20 000 ₽</td>
+        <td class="text-right">15₽</td>
+        <td class="text-right">10%</td>
+        <td class="text-right">1 333</td>
+        <td class="text-right">100</td>
+        <td class="text-right yellow">200 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Telegram Ads</strong></td>
+        <td class="text-right">15 000 ₽</td>
+        <td class="text-right">12₽</td>
+        <td class="text-right">8%</td>
+        <td class="text-right">427</td>
+        <td class="text-right">26</td>
+        <td class="text-right red">577 ₽</td>
+      </tr>
+      <tr style="background:#111827;">
+        <td><strong>ИТОГО</strong></td>
+        <td class="text-right"><strong>80 000 ₽</strong></td>
+        <td class="text-right">&mdash;</td>
+        <td class="text-right">&mdash;</td>
+        <td class="text-right"><strong>6 900</strong></td>
+        <td class="text-right"><strong>690</strong></td>
+        <td class="text-right"><strong>116 ₽</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:11px;color:#888;">* Реферальная программа: пригласивший получает 50 бесплатных токенов (~35₽ себестоимость за 100 рефералов). Приглашённый &mdash; 20 бонусных токенов.</p>
+
+  <p><strong>Средний CAC:</strong> 116₽ при среднем чеке 1 500₽ &rarr; <span class="pill pill-green">LTV/CAC = 12.9x</span> &mdash; отличная экономика юнита.</p>
+
+  <div class="sep"></div>
+
+  <h3>3.3 Понедельный план действий (8 недель)</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Неделя</th>
+        <th>Каналы</th>
+        <th>Ключевые действия</th>
+        <th class="text-right">Бюджет</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Н1</strong><br>15-21 мар</td>
+        <td>vc.ru, TG</td>
+        <td>
+          Публикация статьи на vc.ru &laquo;Мы создали российский аналог Midjourney&raquo;.<br>
+          Посев в 15+ Telegram-чатов (нейросети, дизайн, маркетинг).<br>
+          Создание Telegram-канала ЭВА.<br>
+          Запуск 3 YouTube Shorts с демо генераций.
+        </td>
+        <td class="text-right green">0 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Н2</strong><br>22-28 мар</td>
+        <td>vc.ru, TG, YT</td>
+        <td>
+          Вторая статья на vc.ru &laquo;Как мы считаем токены: прозрачный AI&raquo;.<br>
+          Продолжение посева в TG.<br>
+          Ещё 5 Shorts.<br>
+          Сбор обратной связи от первых пользователей.<br>
+          Запуск реферальной программы.
+        </td>
+        <td class="text-right green">0 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Н3</strong><br>29 мар - 4 апр</td>
+        <td>Директ, TG, vc.ru</td>
+        <td>
+          Запуск Яндекс.Директ: 5 000₽ тестовый бюджет.<br>
+          Ключи: &laquo;генерация фото нейросеть&raquo;, &laquo;создать видео AI&raquo;.<br>
+          Третья статья на vc.ru (кейс пользователя).<br>
+          A/B тест лендинга.
+        </td>
+        <td class="text-right">5 000 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Н4</strong><br>5-11 апр</td>
+        <td>Директ, VK, TG</td>
+        <td>
+          Оптимизация Директ по данным Н3 (отключить дорогие ключи).<br>
+          Запуск VK Ads: 5 000₽ тест.<br>
+          Публикация сравнения &laquo;ЭВА vs зарубежные аналоги&raquo;.
+        </td>
+        <td class="text-right">10 000 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Н5</strong><br>12-18 апр</td>
+        <td>Директ, VK, TG Ads</td>
+        <td>
+          Масштабирование Директ до 10 000₽/нед.<br>
+          VK Ads: 5 000₽/нед.<br>
+          Запуск Telegram Ads: 5 000₽ тест.<br>
+          Email-рассылка неактивным пользователям.
+        </td>
+        <td class="text-right">20 000 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Н6</strong><br>19-25 апр</td>
+        <td>Все каналы</td>
+        <td>
+          Директ 10 000₽, VK 5 000₽, TG Ads 5 000₽.<br>
+          Четвёртая статья на vc.ru.<br>
+          Промо-акция: &laquo;+30% токенов при покупке до конца недели&raquo;.
+        </td>
+        <td class="text-right">20 000 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Н7</strong><br>26 апр - 2 мая</td>
+        <td>Все каналы</td>
+        <td>
+          Директ 8 000₽, VK 5 000₽, TG Ads 2 000₽.<br>
+          Ретаргетинг на посетителей лендинга.<br>
+          Push-уведомления &laquo;Ваш баланс заканчивается&raquo;.
+        </td>
+        <td class="text-right">15 000 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Н8</strong><br>3-14 мая</td>
+        <td>Все каналы</td>
+        <td>
+          Финальный рывок: Директ 7 000₽, VK 3 000₽.<br>
+          Акция &laquo;День рождения ЭВА: скидка 20% на Студию&raquo;.<br>
+          Сбор отзывов, подготовка к следующему этапу.
+        </td>
+        <td class="text-right">10 000 ₽</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- РАЗДЕЛ 3 (продолжение) + РАЗДЕЛ 4: КОМАНДА        -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="page">
+  <h3>3.4 Контент-план для органики</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Канал</th>
+        <th>Формат</th>
+        <th>Частота</th>
+        <th>Темы</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>vc.ru</td>
+        <td>Лонгрид 3-5 тыс. знаков</td>
+        <td>1 раз / 2 нед</td>
+        <td>Запуск, технология, кейсы, сравнения, инсайты</td>
+      </tr>
+      <tr>
+        <td>Telegram-канал</td>
+        <td>Посты + примеры генераций</td>
+        <td>Ежедневно</td>
+        <td>Примеры, промты дня, обновления, советы</td>
+      </tr>
+      <tr>
+        <td>YouTube Shorts</td>
+        <td>Вертикальное видео 30-60с</td>
+        <td>3-5 / нед</td>
+        <td>&laquo;Сгенерировал X за 10 секунд&raquo;, before/after, промт-челленджи</td>
+      </tr>
+      <tr>
+        <td>Twitter/X</td>
+        <td>Треды + изображения</td>
+        <td>3 / нед</td>
+        <td>AI-тренды, showcase, промо</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3.5 Реферальная программа &mdash; детали</h3>
+
+  <div class="card">
+    <table>
+      <tr><td><strong>Механика:</strong></td><td>Уникальная реф-ссылка в личном кабинете</td></tr>
+      <tr><td><strong>Бонус пригласившему:</strong></td><td>50 токенов за каждого приглашённого, купившего пакет</td></tr>
+      <tr><td><strong>Бонус приглашённому:</strong></td><td>20 бонусных токенов при регистрации по ссылке</td></tr>
+      <tr><td><strong>Себестоимость бонусов:</strong></td><td>~3-5₽ за реферала (при генерации дешёвыми моделями)</td></tr>
+      <tr><td><strong>Потолок:</strong></td><td>Макс. 500 токенов/мес на одного реферера</td></tr>
+      <tr><td><strong>Ожидаемый эффект:</strong></td><td>1 000 регистраций, 150 платящих (K-фактор ~0.15)</td></tr>
+    </tbody>
+  </div>
+
+  <div class="sep"></div>
+
+  <h2><span class="section-num">4</span> Команда</h2>
+
+  <h3>4.1 Текущий состав и потребности</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Роль</th>
+        <th>Статус</th>
+        <th>Когда нужен</th>
+        <th>Формат</th>
+        <th class="text-right">Стоимость / мес</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Основатель / разработчик</strong></td>
+        <td><span class="pill pill-green">Есть</span></td>
+        <td>С дня 1</td>
+        <td>Фуллтайм</td>
+        <td class="text-right">0 ₽ (equity)</td>
+      </tr>
+      <tr>
+        <td><strong>SMM / контент-мейкер</strong></td>
+        <td><span class="pill pill-yellow">Нужен</span></td>
+        <td>Неделя 3</td>
+        <td>Парттайм фриланс</td>
+        <td class="text-right">10 000 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Таргетолог</strong></td>
+        <td><span class="pill pill-yellow">Нужен</span></td>
+        <td>Неделя 3</td>
+        <td>Фриланс, % от бюджета</td>
+        <td class="text-right">10-15% бюджета</td>
+      </tr>
+      <tr>
+        <td><strong>Поддержка / модерация</strong></td>
+        <td><span class="pill pill-green">Позже</span></td>
+        <td>Неделя 6+</td>
+        <td>Парттайм фриланс</td>
+        <td class="text-right">5 000 ₽</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4.2 ФОТ помесячно</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Роль</th>
+        <th class="text-right">Месяц 1</th>
+        <th class="text-right">Месяц 2</th>
+        <th class="text-right">Итого</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>SMM / контент</td><td class="text-right">5 000 ₽ (пол-месяца)</td><td class="text-right">10 000 ₽</td><td class="text-right">15 000 ₽</td></tr>
+      <tr><td>Таргетолог (15% от бюджета)</td><td class="text-right">1 500 ₽</td><td class="text-right">10 500 ₽</td><td class="text-right">12 000 ₽</td></tr>
+      <tr><td>Поддержка</td><td class="text-right">0 ₽</td><td class="text-right">3 000 ₽</td><td class="text-right">3 000 ₽</td></tr>
+      <tr style="background:#111827;"><td><strong>Итого ФОТ</strong></td><td class="text-right"><strong>6 500 ₽</strong></td><td class="text-right"><strong>23 500 ₽</strong></td><td class="text-right"><strong>30 000 ₽</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.3 Можно ли обойтись без найма?</h3>
+
+  <div class="card">
+    <p><strong class="yellow">Да, но с существенными ограничениями:</strong></p>
+    <ul>
+      <li><strong>Контент:</strong> Основатель пишет сам &rarr; -10 часов/нед на разработку. Допустимо в месяц 1, критично в месяц 2.</li>
+      <li><strong>Таргет:</strong> Самостоятельная настройка Директ возможна, но неоптимальна. Потери на тесты ~30% бюджета. Решение: использовать автостратегии Яндекса.</li>
+      <li><strong>Поддержка:</strong> В месяц 1 &mdash; Telegram-бот + FAQ. В месяц 2 при 5000+ пользователей поддержка критична.</li>
+    </ul>
+    <p style="margin-top:10px;"><strong>Рекомендация:</strong> Месяц 1 &mdash; solo. С недели 3 &mdash; SMM-фрилансер (10 000₽/мес). С недели 5 &mdash; таргетолог (% от бюджета). Это сэкономит ~15 000₽ и позволит основателю фокусироваться на продукте.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- РАЗДЕЛ 5: ИНФРАСТРУКТУРА И ХОСТИНГ                 -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">5</span> Инфраструктура и хостинг</h2>
+
+  <h3>5.1 Текущий стек</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Компонент</th>
+        <th>Сервис</th>
+        <th>Тариф</th>
+        <th class="text-right">Стоимость/мес</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Фронтенд + API routes</td><td>Vercel</td><td>Pro</td><td class="text-right">2 000 ₽ ($20)</td></tr>
+      <tr><td>БД + Auth + Storage</td><td>Supabase</td><td>Pro</td><td class="text-right">2 500 ₽ ($25)</td></tr>
+      <tr><td>Домен</td><td>Регистратор</td><td>&mdash;</td><td class="text-right">100 ₽</td></tr>
+      <tr style="background:#111827;"><td colspan="3"><strong>Итого текущие</strong></td><td class="text-right"><strong>4 600 ₽</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.2 Масштабирование по MAU</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>MAU</th>
+        <th>Vercel</th>
+        <th>Supabase</th>
+        <th>CDN (медиа)</th>
+        <th>Мониторинг</th>
+        <th class="text-right">Итого/мес</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1 000</strong></td>
+        <td>Pro ($20)</td>
+        <td>Pro ($25)</td>
+        <td>Не нужен</td>
+        <td>Бесплатные инструменты</td>
+        <td class="text-right green">~5 000 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>5 000</strong></td>
+        <td>Pro ($20)</td>
+        <td>Pro + доп. storage ($25-50)</td>
+        <td>Cloudflare R2 (~$5)</td>
+        <td>Sentry free</td>
+        <td class="text-right yellow">~8 000 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>20 000</strong></td>
+        <td>Pro / Enterprise ($20-100)</td>
+        <td>Team ($599) или selfhost</td>
+        <td>R2 (~$20)</td>
+        <td>Sentry + Uptime</td>
+        <td class="text-right red">~75 000 ₽</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>5.3 Рекомендации по CDN для медиафайлов</h3>
+
+  <div class="card">
+    <p><strong>Проблема:</strong> Сгенерированные изображения и видео &mdash; тяжёлый контент. При 5 000 MAU и ~50 генераций/юзер &mdash; это 250 000 файлов/мес.</p>
+    <p><strong>Решение (по порядку приоритета):</strong></p>
+    <ol>
+      <li><strong>Cloudflare R2</strong> &mdash; S3-совместимое хранилище без egress fees. $0.015/GB/мес. При 500 GB = $7.50/мес. <span class="pill pill-green">Рекомендуется</span></li>
+      <li><strong>Supabase Storage</strong> &mdash; уже включён в Pro. До 100 GB бесплатно. Достаточно на месяц 1.</li>
+      <li><strong>Политика хранения:</strong> Удалять файлы старше 30 дней. Давать юзерам скачать в течение 7 дней. Экономия до 80% storage.</li>
+    </ol>
+  </div>
+
+  <h3>5.4 Мониторинг и алертинг</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Задача</th>
+        <th>Инструмент</th>
+        <th>Стоимость</th>
+        <th>Приоритет</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Ошибки в коде</td><td>Sentry (free tier: 5K events/мес)</td><td class="green">0 ₽</td><td><span class="pill pill-red">Критично</span></td></tr>
+      <tr><td>Uptime мониторинг</td><td>UptimeRobot (free: 50 мониторов)</td><td class="green">0 ₽</td><td><span class="pill pill-red">Критично</span></td></tr>
+      <tr><td>Аналитика</td><td>Vercel Analytics (встроена в Pro)</td><td class="green">0 ₽</td><td><span class="pill pill-yellow">Важно</span></td></tr>
+      <tr><td>Расход API-бюджета</td><td>Кастомный дашборд (Supabase + SQL)</td><td class="green">0 ₽</td><td><span class="pill pill-red">Критично</span></td></tr>
+      <tr><td>Метрики бизнеса</td><td>PostHog (free: 1M events/мес)</td><td class="green">0 ₽</td><td><span class="pill pill-yellow">Важно</span></td></tr>
+      <tr><td>Алерты</td><td>Telegram-бот для уведомлений</td><td class="green">0 ₽</td><td><span class="pill pill-yellow">Важно</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="card" style="border-color:#ef535044;">
+    <p><strong class="red">Критические алерты (настроить до запуска):</strong></p>
+    <ul>
+      <li>Баланс API-провайдера ниже $50 &rarr; Telegram-уведомление + email</li>
+      <li>Сайт недоступен &gt; 2 мин &rarr; Telegram-уведомление</li>
+      <li>Ошибки API &gt; 5% запросов за 10 мин &rarr; алерт</li>
+      <li>Суточный расход API &gt; 150% от среднего &rarr; алерт (возможен абьюз)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- РАЗДЕЛ 6: УПРАВЛЕНИЕ РИСКАМИ                       -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">6</span> Управление рисками</h2>
+
+  <h3>Топ-5 рисков</h3>
+
+  <!-- Риск 1 -->
+  <div class="card risk-high" style="margin-bottom:14px;">
+    <h4 style="margin-top:0;">Риск 1: Не набираем достаточно трафика</h4>
+    <table>
+      <tr><td style="width:120px;"><strong>Вероятность:</strong></td><td><span class="pill pill-yellow">Средняя (40%)</span></td></tr>
+      <tr><td><strong>Импакт:</strong></td><td><span class="pill pill-red">Критический</span> &mdash; без трафика нет выручки</td></tr>
+      <tr><td><strong>Индикатор:</strong></td><td>Менее 500 регистраций к концу недели 2</td></tr>
+      <tr><td><strong>План B:</strong></td><td>
+        <ul style="margin:4px 0 0 16px;">
+          <li>Увеличить частоту публикаций на vc.ru до 2/нед</li>
+          <li>Запустить платный трафик раньше (с недели 2 вместо 3)</li>
+          <li>Добавить ProductHunt / HackerNews (англоязычный трафик)</li>
+          <li>Коллаборации с AI-блогерами (бартер: бесплатные токены за обзор)</li>
+          <li>Хабр &mdash; техническая статья об архитектуре</li>
+        </ul>
+      </td></tr>
+    </table>
+  </div>
+
+  <!-- Риск 2 -->
+  <div class="card risk-high" style="margin-bottom:14px;">
+    <h4 style="margin-top:0;">Риск 2: Низкая конверсия free &rarr; paid (&lt;5%)</h4>
+    <table>
+      <tr><td style="width:120px;"><strong>Вероятность:</strong></td><td><span class="pill pill-yellow">Средняя (35%)</span></td></tr>
+      <tr><td><strong>Импакт:</strong></td><td><span class="pill pill-red">Критический</span> &mdash; выручка падает вдвое</td></tr>
+      <tr><td><strong>Индикатор:</strong></td><td>Менее 30 платящих при 600+ регистрациях</td></tr>
+      <tr><td><strong>План B:</strong></td><td>
+        <ul style="margin:4px 0 0 16px;">
+          <li>Снизить бесплатные генерации с 10 до 5 (ускорить конверсию)</li>
+          <li>Добавить watermark на бесплатные генерации</li>
+          <li>Ввести пакет «Микро» &mdash; 190₽ за 150 токенов (снизить порог входа)</li>
+          <li>Flash-sale: &laquo;Первые 100 покупателей &mdash; +50% токенов&raquo;</li>
+          <li>Улучшить onboarding: guided tour с демо-промтами</li>
+        </ul>
+      </td></tr>
+    </table>
+  </div>
+
+  <!-- Риск 3 -->
+  <div class="card risk-med" style="margin-bottom:14px;">
+    <h4 style="margin-top:0;">Риск 3: Рост курса доллара (100₽ &rarr; 120₽+)</h4>
+    <table>
+      <tr><td style="width:120px;"><strong>Вероятность:</strong></td><td><span class="pill pill-yellow">Средняя (30%)</span></td></tr>
+      <tr><td><strong>Импакт:</strong></td><td><span class="pill pill-yellow">Значительный</span> &mdash; маржа по видео падает до 0-отрицательной</td></tr>
+      <tr><td><strong>Индикатор:</strong></td><td>Курс USD/RUB &gt; 110</td></tr>
+      <tr><td><strong>План B:</strong></td><td>
+        <ul style="margin:4px 0 0 16px;">
+          <li>Повысить стоимость видео-генерации в токенах (Kling: 50 &rarr; 65 tk)</li>
+          <li>Заключить форвардный контракт на покупку USD (если объёмы позволяют)</li>
+          <li>Сместить микс в сторону фото-генерации (маржа 87-95% защищает)</li>
+          <li>Ввести динамическое ценообразование привязанное к курсу</li>
+        </ul>
+      </td></tr>
+    </table>
+  </div>
+
+  <!-- Риск 4 -->
+  <div class="card risk-med" style="margin-bottom:14px;">
+    <h4 style="margin-top:0;">Риск 4: API-провайдеры поднимают цены</h4>
+    <table>
+      <tr><td style="width:120px;"><strong>Вероятность:</strong></td><td><span class="pill pill-green">Низкая (15%)</span></td></tr>
+      <tr><td><strong>Импакт:</strong></td><td><span class="pill pill-yellow">Значительный</span></td></tr>
+      <tr><td><strong>Индикатор:</strong></td><td>Уведомление от провайдера об изменении прайса</td></tr>
+      <tr><td><strong>План B:</strong></td><td>
+        <ul style="margin:4px 0 0 16px;">
+          <li>Мультивендорность: для каждого типа генерации 2-3 провайдера</li>
+          <li>Оперативное переключение на более дешёвую модель</li>
+          <li>Пересчёт токенов для дорожающей модели (обновить в течение 24ч)</li>
+          <li>В среднесрочной перспективе: собственные модели на open-source (Stable Diffusion, CogVideoX)</li>
+        </ul>
+      </td></tr>
+    </table>
+  </div>
+
+  <!-- Риск 5 -->
+  <div class="card risk-med" style="margin-bottom:14px;">
+    <h4 style="margin-top:0;">Риск 5: Конкурент (Яндекс/Сбер) запускает аналог</h4>
+    <table>
+      <tr><td style="width:120px;"><strong>Вероятность:</strong></td><td><span class="pill pill-yellow">Средняя (50%)</span></td></tr>
+      <tr><td><strong>Импакт:</strong></td><td><span class="pill pill-yellow">Значительный</span> &mdash; но не фатальный в 60-дневном горизонте</td></tr>
+      <tr><td><strong>Индикатор:</strong></td><td>Анонс продукта от крупного игрока</td></tr>
+      <tr><td><strong>План B:</strong></td><td>
+        <ul style="margin:4px 0 0 16px;">
+          <li><strong>Скорость:</strong> Крупным игрокам нужно 3-6 мес на запуск &rarr; у нас есть фора</li>
+          <li><strong>Мульти-модельность:</strong> Яндекс будет продвигать свою модель, ЭВА даёт доступ к лучшим мировым</li>
+          <li><strong>Ценообразование:</strong> Быть дешевле корпоратов (они не оптимизируют на маленьких чеках)</li>
+          <li><strong>Ниша:</strong> Фокус на SMM-щиков, дизайнеров, малый бизнес &mdash; сегмент, который корпораты не обслуживают</li>
+          <li><strong>Комьюнити:</strong> Сильное TG-сообщество &mdash; лояльность, которую нельзя купить</li>
+        </ul>
+      </td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- РАЗДЕЛ 7: KPI И КОНТРОЛЬНЫЕ ТОЧКИ                  -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">7</span> KPI и контрольные точки</h2>
+
+  <h3>7.1 Понедельные KPI</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Неделя</th>
+        <th class="text-right">Регистрации<br>(накопит.)</th>
+        <th class="text-right">Активации<br>(3+ ген.)</th>
+        <th class="text-right">Платящих<br>(накопит.)</th>
+        <th class="text-right">Выручка<br>(за нед.)</th>
+        <th class="text-right">Чистая прибыль<br>(накопит.)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Н1</strong></td>
+        <td class="text-right">300</td>
+        <td class="text-right">150</td>
+        <td class="text-right">15</td>
+        <td class="text-right">15 000 ₽</td>
+        <td class="text-right">3 000 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Н2</strong></td>
+        <td class="text-right">750</td>
+        <td class="text-right">375</td>
+        <td class="text-right">45</td>
+        <td class="text-right">35 000 ₽</td>
+        <td class="text-right">20 000 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Н3</strong></td>
+        <td class="text-right">1 400</td>
+        <td class="text-right">700</td>
+        <td class="text-right">100</td>
+        <td class="text-right">80 000 ₽</td>
+        <td class="text-right">68 000 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Н4</strong></td>
+        <td class="text-right">1 900</td>
+        <td class="text-right">950</td>
+        <td class="text-right">190</td>
+        <td class="text-right">155 000 ₽</td>
+        <td class="text-right">167 000 ₽</td>
+      </tr>
+      <tr style="border-top:2px solid #f5c84244;">
+        <td><strong>Н5</strong></td>
+        <td class="text-right">2 900</td>
+        <td class="text-right">1 450</td>
+        <td class="text-right">300</td>
+        <td class="text-right">140 000 ₽</td>
+        <td class="text-right">242 000 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Н6</strong></td>
+        <td class="text-right">4 100</td>
+        <td class="text-right">2 050</td>
+        <td class="text-right">430</td>
+        <td class="text-right">170 000 ₽</td>
+        <td class="text-right">334 000 ₽</td>
+      </tr>
+      <tr>
+        <td><strong>Н7</strong></td>
+        <td class="text-right">5 500</td>
+        <td class="text-right">2 750</td>
+        <td class="text-right">570</td>
+        <td class="text-right">200 000 ₽</td>
+        <td class="text-right">444 000 ₽</td>
+      </tr>
+      <tr style="background:#111827;">
+        <td><strong>Н8</strong></td>
+        <td class="text-right kpi-target">6 900</td>
+        <td class="text-right kpi-target">3 450</td>
+        <td class="text-right kpi-target">690</td>
+        <td class="text-right kpi-target">238 000 ₽</td>
+        <td class="text-right kpi-target">500 000+ ₽</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>7.2 Триггеры пересмотра плана <span class="red">(Красные флаги)</span></h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Когда</th>
+        <th>Красный флаг</th>
+        <th>Действие</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Конец Н2</td>
+        <td class="red">&lt; 400 регистраций</td>
+        <td>Экстренный запуск платного трафика. Пересмотр лендинга. Добавить vc.ru/Хабр статьи.</td>
+      </tr>
+      <tr>
+        <td>Конец Н2</td>
+        <td class="red">Конверсия free&rarr;paid &lt; 3%</td>
+        <td>Снизить бесплатный лимит. Добавить watermark. Ввести микро-пакет 190₽.</td>
+      </tr>
+      <tr>
+        <td>Конец Н4</td>
+        <td class="red">&lt; 100 платящих</td>
+        <td>Пересмотр цен. Промо-акция. Увеличить рекламный бюджет. Возможно, pivot в сторону B2B.</td>
+      </tr>
+      <tr>
+        <td>Конец Н4</td>
+        <td class="red">CAC &gt; 400₽</td>
+        <td>Отключить неэффективные каналы. Переключиться на органику и рефералку.</td>
+      </tr>
+      <tr>
+        <td>Конец Н6</td>
+        <td class="red">Накопительная прибыль &lt; 200 000₽</td>
+        <td>Агрессивная оптимизация: сократить OPEX, поднять цены на 10-15%, увеличить долю фото-генераций.</td>
+      </tr>
+      <tr>
+        <td>Любой момент</td>
+        <td class="red">Маржа API падает ниже 40%</td>
+        <td>Немедленный пересчёт токенов для убыточных моделей. Временное отключение если нужно.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>7.3 Триггеры ускорения <span class="green">(Зелёные флаги)</span></h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Когда</th>
+        <th>Зелёный флаг</th>
+        <th>Действие</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Конец Н2</td>
+        <td class="green">&gt; 1 000 регистраций</td>
+        <td>Ускорить запуск платного трафика на неделю раньше. Увеличить бюджет на 20%.</td>
+      </tr>
+      <tr>
+        <td>Конец Н2</td>
+        <td class="green">Конверсия free&rarr;paid &gt; 15%</td>
+        <td>Увеличить бесплатный лимит (больше wow-эффект). Вложить больше в трафик &mdash; юнит-экономика позволяет.</td>
+      </tr>
+      <tr>
+        <td>Конец Н4</td>
+        <td class="green">&gt; 250 платящих</td>
+        <td>Удвоить рекламный бюджет на месяц 2. Нанять второго контент-мейкера.</td>
+      </tr>
+      <tr>
+        <td>Конец Н4</td>
+        <td class="green">CAC &lt; 100₽</td>
+        <td>Масштабировать все работающие каналы на 50%. Тестировать новые (MyTarget, Одноклассники).</td>
+      </tr>
+      <tr>
+        <td>Любой момент</td>
+        <td class="green">Виральный контент (10K+ просмотров)</td>
+        <td>Немедленно поддержать промо-акцией. Подготовить лендинг под трафик. Boost пост.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- РАЗДЕЛ 8: ЧЕК-ЛИСТ ЗАПУСКА                        -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">8</span> Чек-лист запуска</h2>
+
+  <h3>8.1 Технические задачи (до старта продаж)</h3>
+
+  <div class="card">
+    <div class="check-item">Интеграция ЮKassa: webhook обработка, автоматическое начисление токенов</div>
+    <div class="check-item">Система учёта токенов: списание при каждой генерации, отображение баланса</div>
+    <div class="check-item">Бесплатные пробные генерации: 10 генераций при регистрации (Gemini/Flux)</div>
+    <div class="check-item">Страница тарифов с decoy-эффектом (выделить &laquo;Оптимальный&raquo; как рекомендуемый)</div>
+    <div class="check-item">Личный кабинет: история генераций, баланс, покупки</div>
+    <div class="check-item">Реферальная система: генерация ссылок, трекинг, начисление бонусов</div>
+    <div class="check-item">Email-уведомления: регистрация, покупка, низкий баланс (&lt;50 tk)</div>
+    <div class="check-item">Rate limiting: защита от абьюза (макс. 30 генераций/час для бесплатных)</div>
+    <div class="check-item">Sentry: подключить error tracking</div>
+    <div class="check-item">UptimeRobot: мониторинг доступности (5-мин интервал)</div>
+    <div class="check-item">Дашборд расхода API: суточный/недельный расход по моделям</div>
+    <div class="check-item">SEO-оптимизация лендинга: meta-теги, OG-картинка, sitemap</div>
+    <div class="check-item">Нагрузочное тестирование: 100 одновременных запросов</div>
+  </div>
+
+  <h3>8.2 Маркетинговые задачи</h3>
+
+  <div class="card">
+    <div class="check-item">Лендинг: заголовок, демо-генерации, тарифы, FAQ, CTA</div>
+    <div class="check-item">Подготовить 10 примеров генераций для портфолио (лучшие результаты)</div>
+    <div class="check-item">Написать первую статью для vc.ru (черновик 3-5 тыс. знаков)</div>
+    <div class="check-item">Создать Telegram-канал, оформить описание и аватарку</div>
+    <div class="check-item">Подготовить 5 YouTube Shorts (screen recording генерации + музыка)</div>
+    <div class="check-item">Составить список 20+ Telegram-чатов для посева</div>
+    <div class="check-item">Подготовить рекламные креативы для Яндекс.Директ (3 варианта)</div>
+    <div class="check-item">Подготовить рекламные креативы для VK Ads (3 варианта)</div>
+    <div class="check-item">Настроить Яндекс.Метрику + цели конверсии</div>
+    <div class="check-item">Настроить пиксель VK на лендинге</div>
+    <div class="check-item">Подготовить email-шаблоны: welcome, purchase, low balance</div>
+  </div>
+
+  <h3>8.3 Юридические задачи</h3>
+
+  <div class="card">
+    <div class="check-item"><strong>Регистрация ИП</strong> (ОКВЭД 62.01 + 63.11) &mdash; 3-5 рабочих дней через Госуслуги</div>
+    <div class="check-item"><strong>Открыть расчётный счёт</strong> (Тинькофф / Точка &mdash; бесплатное обслуживание для новых ИП)</div>
+    <div class="check-item"><strong>Выбрать налоговый режим:</strong> УСН 6% (доходы) &mdash; оптимально при высокой марже</div>
+    <div class="check-item"><strong>Публичная оферта</strong> &mdash; разместить на сайте (шаблон + адаптация для токеновой модели)</div>
+    <div class="check-item"><strong>Политика конфиденциальности</strong> &mdash; 152-ФЗ, GDPR-like для данных пользователей</div>
+    <div class="check-item"><strong>Пользовательское соглашение</strong> &mdash; права на генерации, ограничения использования</div>
+    <div class="check-item"><strong>Уведомление Роскомнадзор</strong> об обработке персональных данных</div>
+    <div class="check-item"><strong>Согласие на обработку ПД</strong> &mdash; чекбокс при регистрации</div>
+  </div>
+
+  <h3>8.4 Платёжная система (ЮKassa)</h3>
+
+  <div class="card">
+    <div class="check-item"><strong>Регистрация магазина</strong> в ЮKassa (нужен ИП/ООО)</div>
+    <div class="check-item"><strong>Подключить способы оплаты:</strong> банковские карты, ЮMoney, SberPay</div>
+    <div class="check-item"><strong>Настроить webhook</strong> для уведомлений об успешных платежах</div>
+    <div class="check-item"><strong>Реализовать логику:</strong> payment &rarr; webhook &rarr; начисление токенов &rarr; email пользователю</div>
+    <div class="check-item"><strong>Тестовые платежи</strong> в sandbox-среде (все 4 пакета)</div>
+    <div class="check-item"><strong>Обработка ошибок:</strong> что делать если webhook не дошёл (retry логика)</div>
+    <div class="check-item"><strong>Чеки 54-ФЗ:</strong> подключить онлайн-кассу через ЮKassa (встроенная фискализация)</div>
+    <div class="check-item"><strong>Комиссия:</strong> 3.5% &mdash; учтена в финмодели (~36 000₽ за 2 мес)</div>
+    <div class="check-item"><strong>Возвраты:</strong> описать политику (токены не возвращаются после использования)</div>
+  </div>
+
+  <div class="sep"></div>
+
+  <h3>Приоритизация задач перед запуском</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Приоритет</th>
+        <th>Задачи</th>
+        <th>Срок</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="bg-red">
+        <td><span class="pill pill-red">P0 — Блокер</span></td>
+        <td>ЮKassa, токены, тарифы, оферта, ИП</td>
+        <td>До запуска</td>
+      </tr>
+      <tr class="bg-yellow">
+        <td><span class="pill pill-yellow">P1 — Важно</span></td>
+        <td>Лендинг, Sentry, метрика, email, примеры генераций</td>
+        <td>Неделя 1</td>
+      </tr>
+      <tr class="bg-green">
+        <td><span class="pill pill-green">P2 — Желательно</span></td>
+        <td>Реферальная система, рекламные креативы, Shorts</td>
+        <td>Неделя 2</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- ФИНАЛЬНАЯ СТРАНИЦА: SUMMARY                        -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2 style="border-bottom-color:#f5c84266;">Резюме плана</h2>
+
+  <div class="card-row">
+    <div class="card" style="text-align:center;">
+      <div class="label">Целевая прибыль</div>
+      <div class="big-num">500 000 ₽</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="label">Горизонт</div>
+      <div class="big-num">60 дней</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="label">Необходимая выручка</div>
+      <div class="big-num">~1 033 000 ₽</div>
+    </div>
+  </div>
+
+  <div class="card-row">
+    <div class="card" style="text-align:center;">
+      <div class="label">Платящих пользователей</div>
+      <div class="big-num">690</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="label">Средний чек</div>
+      <div class="big-num">1 500 ₽</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="label">Маркетинговый бюджет</div>
+      <div class="big-num">80 000 ₽</div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <h3>Ключевые факторы успеха</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Фактор</th>
+        <th>Почему критичен</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><strong>Скорость запуска</strong></td>
+        <td>Каждый день задержки = потерянные ~8 000₽ потенциальной прибыли</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><strong>Контент на vc.ru</strong></td>
+        <td>Бесплатный высококонверсионный трафик. Первая статья &mdash; в день запуска</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><strong>Микс генераций</strong></td>
+        <td>70% фото (маржа 87-95%) &mdash; ключ к достижению 60% средней маржи</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><strong>Реферальная программа</strong></td>
+        <td>CAC ~33₽ &mdash; самый эффективный платный канал. Запустить не позже Н2</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><strong>Decoy-эффект в тарифах</strong></td>
+        <td>Пакет «Про» (1.00₽/tk) делает «Оптимальный» (0.75₽/tk) и «Студию» (0.62₽/tk) привлекательнее</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td><strong>Быстрая реакция на метрики</strong></td>
+        <td>Еженедельный пересмотр KPI. Если красный флаг &mdash; действовать в тот же день</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="sep"></div>
+
+  <h3>Критический путь (Critical Path)</h3>
+
+  <div class="flow" style="justify-content:center;">
+    <div class="flow-item" style="border-color:#ef5350;">
+      <div style="font-size:10px;color:#ef5350;">СЕЙЧАС</div>
+      <div style="font-weight:600;">ИП + ЮKassa</div>
+      <div style="font-size:10px;color:#888;">5-7 дней</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-item" style="border-color:#ffc107;">
+      <div style="font-size:10px;color:#ffc107;">ПАРАЛЛЕЛЬНО</div>
+      <div style="font-weight:600;">Лендинг + Контент</div>
+      <div style="font-size:10px;color:#888;">3-5 дней</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-item" style="border-color:#4caf50;">
+      <div style="font-size:10px;color:#4caf50;">ДЕНЬ 1</div>
+      <div style="font-weight:600;">Запуск продаж</div>
+      <div style="font-size:10px;color:#888;">vc.ru + TG</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-item" style="border-color:#f5c842;">
+      <div style="font-size:10px;color:#f5c842;">НЕДЕЛЯ 3</div>
+      <div style="font-weight:600;">Платный трафик</div>
+      <div style="font-size:10px;color:#888;">Директ + VK</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-item" style="border-color:#f5c842;background:#1a1400;">
+      <div style="font-size:10px;color:#f5c842;">ДЕНЬ 60</div>
+      <div style="font-weight:700;color:#f5c842;">500 000₽</div>
+      <div style="font-size:10px;color:#888;">цель</div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <div class="card" style="border-color:#f5c84266;text-align:center;">
+    <p style="font-size:15px;color:#f5c842;font-weight:600;margin-bottom:6px;">План амбициозен, но реалистичен.</p>
+    <p style="color:#999;font-size:12px;">При средневзвешенной марже 60%, среднем чеке 1 500₽ и 690 платящих за 2 месяца &mdash;<br>
+    цель в 500 000₽ чистой прибыли достижима при условии последовательного выполнения каждого шага.</p>
+    <p style="color:#666;font-size:11px;margin-top:12px;">Главный риск &mdash; не трафик и не конверсия, а <strong style="color:#999;">скорость исполнения</strong>. Начинайте сегодня.</p>
+  </div>
+
+  <div class="footnote" style="text-align:center;margin-top:40px;">
+    ЭВА &bull; Операционный план &bull; Март 2026<br>
+    Документ подготовлен для внутреннего использования
+  </div>
+</div>
+
+</body>
+</html>

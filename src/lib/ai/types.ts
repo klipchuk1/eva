@@ -9,6 +9,8 @@ export interface ModelConfig {
   description: string;
   isNew?: boolean;
   supportsImageInput?: boolean;
+  supportsStartImage?: boolean;
+  supportsEndImage?: boolean;
   maxResolution?: { width: number; height: number };
   maxDurationSec?: number;
 }

@@ -87,6 +87,8 @@ export const MODEL_REGISTRY: Record<string, ModelConfig> = {
     displayName: "Kling 3.0",
     description: "Кинематографичное видео со звуком, до 15 сек",
     isNew: true,
+    supportsStartImage: true,
+    supportsEndImage: true,
     maxDurationSec: 15,
   },
   "kling-2.1": {
@@ -96,6 +98,8 @@ export const MODEL_REGISTRY: Record<string, ModelConfig> = {
     baseTokenCost: 35,
     displayName: "Kling 2.1",
     description: "Качественное видео от Kuaishou",
+    supportsStartImage: true,
+    supportsEndImage: true,
     maxDurationSec: 10,
   },
   "pixverse-v5": {
@@ -106,6 +110,7 @@ export const MODEL_REGISTRY: Record<string, ModelConfig> = {
     displayName: "PixVerse V5.6",
     description: "Стилизованное видео, отличные эффекты",
     isNew: true,
+    supportsStartImage: true,
     maxDurationSec: 8,
   },
   "luma-ray": {

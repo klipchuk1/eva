@@ -62,6 +62,15 @@ export const replicateClient: AIProviderClient = {
       input.negative_prompt = params.negativePrompt;
     }
 
+    // Map start_image/end_image to model-specific parameter names
+    if (input.start_image) {
+      input.image = input.start_image;
+      delete input.start_image;
+    }
+    if (input.end_image) {
+      // Kling models use end_image, which is already correct
+    }
+
     const prediction = await createPrediction(params.apiModel, input);
 
     return {

@@ -16,8 +16,9 @@ export const videoGenerationSchema = z.object({
   prompt: z.string().min(1, "Введите промпт").max(2000),
   modelId: z.string().min(1),
   settings: z.object({
-    duration: z.number().min(2).max(10).default(5),
-    image_url: z.string().url().optional(),
+    duration: z.number().min(2).max(15).default(5),
+    start_image: z.string().url().optional(),
+    end_image: z.string().url().optional(),
   }),
 });
 
