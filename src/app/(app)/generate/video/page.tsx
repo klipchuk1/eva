@@ -273,6 +273,11 @@ export default function GenerateVideoPage() {
                 onChange={(e) => setDuration(Number(e.target.value))}
                 className="w-full"
               />
+              <div className="flex justify-between mt-1.5 px-0.5">
+                {Array.from({ length: maxDuration - 1 }, (_, i) => i + 2).map((s) => (
+                  <span key={s} className="text-[10px] text-slate-600">{s}с</span>
+                ))}
+              </div>
             </CardContent>
           </Card>
 
