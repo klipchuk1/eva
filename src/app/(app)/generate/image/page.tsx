@@ -172,7 +172,7 @@ function GenerateImageContent() {
             <Card>
               <CardContent className="py-4 space-y-3">
                 <label className="block text-sm font-medium text-slate-300">
-                  Персона
+                  Ваши модели
                 </label>
                 <div className="relative">
                   <button
