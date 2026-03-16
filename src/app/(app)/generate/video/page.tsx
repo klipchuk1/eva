@@ -37,6 +37,12 @@ export default function GenerateVideoPage() {
   const supportsEnd = currentModel?.supportsEndImage ?? false;
   const maxDuration = currentModel?.maxDurationSec ?? 10;
 
+  function calcCost(baseTokenCost: number, dur: number) {
+    return Math.max(Math.ceil(baseTokenCost * (dur / 5)), 1);
+  }
+
+  const estimatedCost = calcCost(currentModel?.baseTokenCost ?? 0, duration);
+
   const recentResults = Array.from(activeGenerations.values())
     .filter((g) => g.type === "video")
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
@@ -252,7 +258,7 @@ export default function GenerateVideoPage() {
                         </span>
                       )}
                     </div>
-                    <span className="text-xs text-amber-400">~{model.baseTokenCost} тк</span>
+                    <span className="text-xs text-amber-400">~{calcCost(model.baseTokenCost, duration)} тк</span>
                   </div>
                   <p className="text-xs text-slate-500 mt-0.5">{model.description}</p>
                 </button>
@@ -289,7 +295,7 @@ export default function GenerateVideoPage() {
 
           <Button onClick={handleGenerate} loading={loading} disabled={!prompt.trim()} className="w-full" size="lg">
             <Sparkles className="h-4 w-4" />
-            {uploading ? "Загрузка изображений..." : "Сгенерировать видео"}
+            {uploading ? "Загрузка изображений..." : `Сгенерировать видео · ${estimatedCost} тк`}
           </Button>
         </div>
 
