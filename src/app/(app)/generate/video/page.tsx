@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Video, Sparkles, Loader2, ImagePlus, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Video, Sparkles, Loader2, ImagePlus, X, Images, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getModelsByType, MODEL_REGISTRY } from "@/lib/constants/models";
@@ -22,6 +22,21 @@ const durationOptions = [3, 5, 7, 10, 15];
 const textareaClass =
   "w-full rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/10 focus:bg-white/[0.07] resize-none transition-all duration-200";
 
+interface FrameState {
+  file: File | null;
+  preview: string | null;  // blob URL or gallery URL
+  galleryUrl: string | null; // if from gallery, already a public URL — no upload needed
+}
+
+const emptyFrame: FrameState = { file: null, preview: null, galleryUrl: null };
+
+interface GalleryItem {
+  id: string;
+  result_url: string;
+  prompt: string;
+  created_at: string;
+}
+
 export default function GenerateVideoPage() {
   const [prompt, setPrompt] = useState("");
   const [modelId, setModelId] = useState(videoModels[0]?.id || "kling-3.0");
@@ -29,13 +44,16 @@ export default function GenerateVideoPage() {
   const [aspectRatio, setAspectRatio] = useState("16:9");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [startImage, setStartImage] = useState<File | null>(null);
-  const [startImagePreview, setStartImagePreview] = useState<string | null>(null);
-  const [endImage, setEndImage] = useState<File | null>(null);
-  const [endImagePreview, setEndImagePreview] = useState<string | null>(null);
+  const [startFrame, setStartFrame] = useState<FrameState>(emptyFrame);
+  const [endFrame, setEndFrame] = useState<FrameState>(emptyFrame);
   const [uploading, setUploading] = useState(false);
   const startImageRef = useRef<HTMLInputElement>(null);
   const endImageRef = useRef<HTMLInputElement>(null);
+
+  // Gallery picker state
+  const [galleryOpen, setGalleryOpen] = useState<"start" | "end" | null>(null);
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
+  const [galleryLoading, setGalleryLoading] = useState(false);
 
   const startGeneration = useStartGeneration();
   const { activeGenerations } = useGenerationStore();
@@ -51,34 +69,43 @@ export default function GenerateVideoPage() {
   }
 
   const estimatedCost = calcCost(currentModel?.baseTokenCost ?? 0, duration);
-
   const availableDurations = durationOptions.filter((d) => d <= maxDuration);
 
   const recentResults = Array.from(activeGenerations.values())
     .filter((g) => g.type === "video")
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-  function handleImageSelect(file: File, type: "start" | "end") {
-    const url = URL.createObjectURL(file);
-    if (type === "start") {
-      setStartImage(file);
-      setStartImagePreview(url);
-    } else {
-      setEndImage(file);
-      setEndImagePreview(url);
+  // Load gallery when picker opens
+  useEffect(() => {
+    if (galleryOpen && galleryItems.length === 0) {
+      setGalleryLoading(true);
+      fetch("/api/gallery?type=image&limit=50")
+        .then((r) => r.json())
+        .then((data) => setGalleryItems(data.items || []))
+        .catch(() => {})
+        .finally(() => setGalleryLoading(false));
     }
+  }, [galleryOpen]);
+
+  function handleFileSelect(file: File, type: "start" | "end") {
+    const url = URL.createObjectURL(file);
+    const frame: FrameState = { file, preview: url, galleryUrl: null };
+    if (type === "start") setStartFrame(frame);
+    else setEndFrame(frame);
   }
 
-  function clearImage(type: "start" | "end") {
-    if (type === "start") {
-      setStartImage(null);
-      if (startImagePreview) URL.revokeObjectURL(startImagePreview);
-      setStartImagePreview(null);
-    } else {
-      setEndImage(null);
-      if (endImagePreview) URL.revokeObjectURL(endImagePreview);
-      setEndImagePreview(null);
-    }
+  function handleGallerySelect(item: GalleryItem) {
+    const frame: FrameState = { file: null, preview: item.result_url, galleryUrl: item.result_url };
+    if (galleryOpen === "start") setStartFrame(frame);
+    else setEndFrame(frame);
+    setGalleryOpen(null);
+  }
+
+  function clearFrame(type: "start" | "end") {
+    const frame = type === "start" ? startFrame : endFrame;
+    if (frame.preview && frame.file) URL.revokeObjectURL(frame.preview);
+    if (type === "start") setStartFrame(emptyFrame);
+    else setEndFrame(emptyFrame);
   }
 
   async function uploadImageToStorage(file: File): Promise<string> {
@@ -90,23 +117,23 @@ export default function GenerateVideoPage() {
     return data.url;
   }
 
+  async function resolveFrameUrl(frame: FrameState): Promise<string | undefined> {
+    if (frame.galleryUrl) return frame.galleryUrl;
+    if (frame.file) return uploadImageToStorage(frame.file);
+    return undefined;
+  }
+
   async function handleGenerate() {
     if (!prompt.trim()) return;
     setError("");
     setLoading(true);
 
     try {
-      let startImageUrl: string | undefined;
-      let endImageUrl: string | undefined;
-
-      if (startImage && supportsStart) {
-        setUploading(true);
-        startImageUrl = await uploadImageToStorage(startImage);
-      }
-      if (endImage && supportsEnd) {
-        setUploading(true);
-        endImageUrl = await uploadImageToStorage(endImage);
-      }
+      setUploading(true);
+      const [startImageUrl, endImageUrl] = await Promise.all([
+        supportsStart ? resolveFrameUrl(startFrame) : undefined,
+        supportsEnd ? resolveFrameUrl(endFrame) : undefined,
+      ]);
       setUploading(false);
 
       await startGeneration("video", {
@@ -130,10 +157,60 @@ export default function GenerateVideoPage() {
   function handleModelChange(newModelId: string) {
     setModelId(newModelId);
     const newModel = MODEL_REGISTRY[newModelId];
-    if (!newModel?.supportsStartImage) clearImage("start");
-    if (!newModel?.supportsEndImage) clearImage("end");
+    if (!newModel?.supportsStartImage) clearFrame("start");
+    if (!newModel?.supportsEndImage) clearFrame("end");
     const newMax = newModel?.maxDurationSec ?? 10;
     if (duration > newMax) setDuration(Math.max(...durationOptions.filter((d) => d <= newMax)));
+  }
+
+  function FrameUploader({ type, frame, supportsFrame }: { type: "start" | "end"; frame: FrameState; supportsFrame: boolean }) {
+    if (!supportsFrame) return null;
+    const inputRef = type === "start" ? startImageRef : endImageRef;
+
+    return (
+      <div>
+        <p className="text-xs text-slate-400 mb-1.5">{type === "start" ? "Первый кадр" : "Последний кадр"}</p>
+        {frame.preview ? (
+          <div className="relative rounded-xl overflow-hidden border border-white/[0.08] aspect-video">
+            <img src={frame.preview} alt="" className="w-full h-full object-cover" />
+            <button
+              onClick={() => clearFrame(type)}
+              className="absolute top-1.5 right-1.5 p-1 rounded-lg bg-black/60 text-white hover:bg-black/80 transition-colors cursor-pointer"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-1.5">
+            <button
+              onClick={() => inputRef.current?.click()}
+              className="flex-1 aspect-video rounded-xl border border-dashed border-white/[0.12] bg-white/[0.02] flex flex-col items-center justify-center gap-1 hover:border-amber-500/30 hover:bg-amber-500/[0.03] transition-all cursor-pointer"
+            >
+              <Upload className="h-4 w-4 text-slate-500" />
+              <span className="text-[10px] text-slate-500">Файл</span>
+            </button>
+            <button
+              onClick={() => setGalleryOpen(type)}
+              className="flex-1 aspect-video rounded-xl border border-dashed border-white/[0.12] bg-white/[0.02] flex flex-col items-center justify-center gap-1 hover:border-amber-500/30 hover:bg-amber-500/[0.03] transition-all cursor-pointer"
+            >
+              <Images className="h-4 w-4 text-slate-500" />
+              <span className="text-[10px] text-slate-500">Галерея</span>
+            </button>
+          </div>
+        )}
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/png,image/jpeg,image/jpg,image/webp"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleFileSelect(file, type);
+            e.target.value = "";
+          }}
+        />
+      </div>
+    );
   }
 
   return (
@@ -144,9 +221,7 @@ export default function GenerateVideoPage() {
         <div className="lg:col-span-1 space-y-4">
           <Card>
             <CardContent className="py-4">
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                Промпт
-              </label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Промпт</label>
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
@@ -165,76 +240,8 @@ export default function GenerateVideoPage() {
                   Кадры <span className="text-slate-500 text-xs">(необязательно)</span>
                 </label>
                 <div className="grid grid-cols-2 gap-3">
-                  {supportsStart && (
-                    <div>
-                      <p className="text-xs text-slate-400 mb-1.5">Первый кадр</p>
-                      {startImagePreview ? (
-                        <div className="relative rounded-xl overflow-hidden border border-white/[0.08] aspect-video">
-                          <img src={startImagePreview} alt="" className="w-full h-full object-cover" />
-                          <button
-                            onClick={() => clearImage("start")}
-                            className="absolute top-1.5 right-1.5 p-1 rounded-lg bg-black/60 text-white hover:bg-black/80 transition-colors cursor-pointer"
-                          >
-                            <X className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => startImageRef.current?.click()}
-                          className="w-full aspect-video rounded-xl border border-dashed border-white/[0.12] bg-white/[0.02] flex flex-col items-center justify-center gap-1 hover:border-amber-500/30 hover:bg-amber-500/[0.03] transition-all cursor-pointer"
-                        >
-                          <ImagePlus className="h-5 w-5 text-slate-500" />
-                          <span className="text-xs text-slate-500">Загрузить</span>
-                        </button>
-                      )}
-                      <input
-                        ref={startImageRef}
-                        type="file"
-                        accept="image/png,image/jpeg,image/jpg,image/webp"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) handleImageSelect(file, "start");
-                          e.target.value = "";
-                        }}
-                      />
-                    </div>
-                  )}
-                  {supportsEnd && (
-                    <div>
-                      <p className="text-xs text-slate-400 mb-1.5">Последний кадр</p>
-                      {endImagePreview ? (
-                        <div className="relative rounded-xl overflow-hidden border border-white/[0.08] aspect-video">
-                          <img src={endImagePreview} alt="" className="w-full h-full object-cover" />
-                          <button
-                            onClick={() => clearImage("end")}
-                            className="absolute top-1.5 right-1.5 p-1 rounded-lg bg-black/60 text-white hover:bg-black/80 transition-colors cursor-pointer"
-                          >
-                            <X className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => endImageRef.current?.click()}
-                          className="w-full aspect-video rounded-xl border border-dashed border-white/[0.12] bg-white/[0.02] flex flex-col items-center justify-center gap-1 hover:border-amber-500/30 hover:bg-amber-500/[0.03] transition-all cursor-pointer"
-                        >
-                          <ImagePlus className="h-5 w-5 text-slate-500" />
-                          <span className="text-xs text-slate-500">Загрузить</span>
-                        </button>
-                      )}
-                      <input
-                        ref={endImageRef}
-                        type="file"
-                        accept="image/png,image/jpeg,image/jpg,image/webp"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) handleImageSelect(file, "end");
-                          e.target.value = "";
-                        }}
-                      />
-                    </div>
-                  )}
+                  <FrameUploader type="start" frame={startFrame} supportsFrame={supportsStart} />
+                  <FrameUploader type="end" frame={endFrame} supportsFrame={supportsEnd} />
                 </div>
               </CardContent>
             </Card>
@@ -360,6 +367,47 @@ export default function GenerateVideoPage() {
           )}
         </div>
       </div>
+
+      {/* Gallery picker modal */}
+      {galleryOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setGalleryOpen(null)}>
+          <div className="bg-[#0f1320] border border-white/[0.08] rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-4 border-b border-white/[0.08]">
+              <h3 className="text-sm font-medium text-white">
+                Выбрать из галереи — {galleryOpen === "start" ? "первый кадр" : "последний кадр"}
+              </h3>
+              <button onClick={() => setGalleryOpen(null)} className="p-1 rounded-lg hover:bg-white/[0.06] text-slate-400 cursor-pointer">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="p-4 overflow-y-auto max-h-[calc(80vh-60px)]">
+              {galleryLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
+                </div>
+              ) : galleryItems.length === 0 ? (
+                <p className="text-center text-slate-500 py-12 text-sm">Нет изображений в галерее</p>
+              ) : (
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                  {galleryItems.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => handleGallerySelect(item)}
+                      className="aspect-square rounded-xl overflow-hidden border border-white/[0.06] hover:border-amber-500/40 transition-all cursor-pointer group"
+                    >
+                      <img
+                        src={item.result_url}
+                        alt={item.prompt}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
