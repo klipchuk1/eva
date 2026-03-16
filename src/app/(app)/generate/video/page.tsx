@@ -11,6 +11,14 @@ import { cn } from "@/lib/utils";
 
 const videoModels = getModelsByType("video");
 
+const aspectRatios = [
+  { label: "16:9", value: "16:9" },
+  { label: "9:16", value: "9:16" },
+  { label: "1:1", value: "1:1" },
+];
+
+const durationOptions = [3, 5, 7, 10, 15];
+
 const textareaClass =
   "w-full rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/10 focus:bg-white/[0.07] resize-none transition-all duration-200";
 
@@ -18,6 +26,7 @@ export default function GenerateVideoPage() {
   const [prompt, setPrompt] = useState("");
   const [modelId, setModelId] = useState(videoModels[0]?.id || "kling-3.0");
   const [duration, setDuration] = useState(5);
+  const [aspectRatio, setAspectRatio] = useState("16:9");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [startImage, setStartImage] = useState<File | null>(null);
@@ -42,6 +51,8 @@ export default function GenerateVideoPage() {
   }
 
   const estimatedCost = calcCost(currentModel?.baseTokenCost ?? 0, duration);
+
+  const availableDurations = durationOptions.filter((d) => d <= maxDuration);
 
   const recentResults = Array.from(activeGenerations.values())
     .filter((g) => g.type === "video")
@@ -103,6 +114,7 @@ export default function GenerateVideoPage() {
         modelId,
         settings: {
           duration,
+          aspect_ratio: aspectRatio,
           ...(startImageUrl && { start_image: startImageUrl }),
           ...(endImageUrl && { end_image: endImageUrl }),
         },
@@ -115,12 +127,13 @@ export default function GenerateVideoPage() {
     }
   }
 
-  // Clear images that aren't supported when model changes
   function handleModelChange(newModelId: string) {
     setModelId(newModelId);
     const newModel = MODEL_REGISTRY[newModelId];
     if (!newModel?.supportsStartImage) clearImage("start");
     if (!newModel?.supportsEndImage) clearImage("end");
+    const newMax = newModel?.maxDurationSec ?? 10;
+    if (duration > newMax) setDuration(Math.max(...durationOptions.filter((d) => d <= newMax)));
   }
 
   return (
@@ -152,7 +165,6 @@ export default function GenerateVideoPage() {
                   Кадры <span className="text-slate-500 text-xs">(необязательно)</span>
                 </label>
                 <div className="grid grid-cols-2 gap-3">
-                  {/* Start image */}
                   {supportsStart && (
                     <div>
                       <p className="text-xs text-slate-400 mb-1.5">Первый кадр</p>
@@ -188,8 +200,6 @@ export default function GenerateVideoPage() {
                       />
                     </div>
                   )}
-
-                  {/* End image */}
                   {supportsEnd && (
                     <div>
                       <p className="text-xs text-slate-400 mb-1.5">Последний кадр</p>
@@ -226,15 +236,11 @@ export default function GenerateVideoPage() {
                     </div>
                   )}
                 </div>
-                {startImage && !endImage && supportsEnd && (
-                  <p className="text-xs text-slate-500">
-                    Можно добавить последний кадр для контроля финала видео
-                  </p>
-                )}
               </CardContent>
             </Card>
           )}
 
+          {/* Model */}
           <Card>
             <CardContent className="py-4 space-y-3">
               <label className="block text-sm font-medium text-slate-300">Модель</label>
@@ -254,7 +260,7 @@ export default function GenerateVideoPage() {
                       <span className="text-sm font-medium text-white">{model.displayName}</span>
                       {(model.supportsStartImage || model.supportsEndImage) && (
                         <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.06] text-slate-400">
-                          {model.supportsStartImage && model.supportsEndImage ? "img2vid" : "1 кадр"}
+                          img2vid
                         </span>
                       )}
                     </div>
@@ -266,22 +272,47 @@ export default function GenerateVideoPage() {
             </CardContent>
           </Card>
 
+          {/* Aspect Ratio */}
           <Card>
-            <CardContent className="py-4">
-              <label className="block text-sm font-medium text-slate-300 mb-3">
-                Длительность: <span className="text-amber-400">{duration}с</span>
-              </label>
-              <input
-                type="range"
-                min={2}
-                max={maxDuration}
-                value={Math.min(duration, maxDuration)}
-                onChange={(e) => setDuration(Number(e.target.value))}
-                className="w-full"
-              />
-              <div className="flex justify-between mt-1.5 px-0.5">
-                {Array.from({ length: maxDuration - 1 }, (_, i) => i + 2).map((s) => (
-                  <span key={s} className="text-[10px] text-slate-600">{s}с</span>
+            <CardContent className="py-4 space-y-3">
+              <label className="block text-sm font-medium text-slate-300">Формат</label>
+              <div className="grid grid-cols-3 gap-2">
+                {aspectRatios.map((ar) => (
+                  <button
+                    key={ar.value}
+                    onClick={() => setAspectRatio(ar.value)}
+                    className={cn(
+                      "rounded-xl border py-2.5 text-sm font-medium transition-all duration-200 cursor-pointer",
+                      aspectRatio === ar.value
+                        ? "border-amber-500/30 bg-amber-500/[0.08] text-amber-400"
+                        : "border-white/[0.06] text-slate-400 hover:border-white/[0.12]"
+                    )}
+                  >
+                    {ar.label}
+                  </button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Duration */}
+          <Card>
+            <CardContent className="py-4 space-y-3">
+              <label className="block text-sm font-medium text-slate-300">Длительность</label>
+              <div className="flex gap-2">
+                {availableDurations.map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setDuration(d)}
+                    className={cn(
+                      "flex-1 rounded-xl border py-2.5 text-sm font-medium transition-all duration-200 cursor-pointer",
+                      duration === d
+                        ? "border-amber-500/30 bg-amber-500/[0.08] text-amber-400"
+                        : "border-white/[0.06] text-slate-400 hover:border-white/[0.12]"
+                    )}
+                  >
+                    {d}с
+                  </button>
                 ))}
               </div>
             </CardContent>
@@ -295,10 +326,11 @@ export default function GenerateVideoPage() {
 
           <Button onClick={handleGenerate} loading={loading} disabled={!prompt.trim()} className="w-full" size="lg">
             <Sparkles className="h-4 w-4" />
-            {uploading ? "Загрузка изображений..." : `Сгенерировать видео · ${estimatedCost} тк`}
+            {uploading ? "Загрузка изображений..." : `Сгенерировать · ${estimatedCost} тк`}
           </Button>
         </div>
 
+        {/* Results */}
         <div className="lg:col-span-2">
           {recentResults.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-96 rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.02]">

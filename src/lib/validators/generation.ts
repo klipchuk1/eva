@@ -17,6 +17,7 @@ export const videoGenerationSchema = z.object({
   modelId: z.string().min(1),
   settings: z.object({
     duration: z.number().min(2).max(15).default(5),
+    aspect_ratio: z.enum(["16:9", "9:16", "1:1"]).default("16:9"),
     start_image: z.string().url().optional(),
     end_image: z.string().url().optional(),
   }),
