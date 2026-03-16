@@ -43,6 +43,7 @@ function GenerateImageContent() {
   const [personas, setPersonas] = useState<PersonalModel[]>([]);
   const [selectedPersona, setSelectedPersona] = useState<string | null>(null);
   const [personaOpen, setPersonaOpen] = useState(false);
+  const [prevModelId, setPrevModelId] = useState<string | null>(null);
 
   const searchParams = useSearchParams();
 
@@ -55,6 +56,19 @@ function GenerateImageContent() {
       })
       .catch(() => {});
   }, []);
+  // Auto-switch model when persona is selected/deselected
+  useEffect(() => {
+    if (selectedPersona) {
+      if (modelId !== "nano-banana-pro") {
+        setPrevModelId(modelId);
+        setModelId("nano-banana-pro");
+      }
+    } else if (prevModelId) {
+      setModelId(prevModelId);
+      setPrevModelId(null);
+    }
+  }, [selectedPersona]);
+
   const startGeneration = useStartGeneration();
   const { activeGenerations } = useGenerationStore();
   useGenerationPolling();
@@ -91,11 +105,10 @@ function GenerateImageContent() {
     setLoading(true);
 
     try {
-      const effectiveModelId = selectedPersona ? "nano-banana-pro" : modelId;
       await startGeneration("image", {
         prompt,
         negativePrompt: negativePrompt || undefined,
-        modelId: effectiveModelId,
+        modelId,
         personalModelId: selectedPersona || undefined,
         settings: {
           width: resolution.width,
@@ -245,8 +258,11 @@ function GenerateImageContent() {
               </label>
               <div className="relative">
                 <button
-                  onClick={() => setModelOpen(!modelOpen)}
-                  className="w-full text-left rounded-xl border border-white/[0.08] bg-white/[0.04] p-3 transition-all duration-200 cursor-pointer hover:border-white/[0.12] flex items-center justify-between"
+                  onClick={() => !selectedPersona && setModelOpen(!modelOpen)}
+                  className={cn(
+                    "w-full text-left rounded-xl border border-white/[0.08] bg-white/[0.04] p-3 transition-all duration-200 flex items-center justify-between",
+                    selectedPersona ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:border-white/[0.12]"
+                  )}
                 >
                   <div>
                     <span className="text-sm font-medium text-white">
