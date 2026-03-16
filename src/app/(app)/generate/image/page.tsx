@@ -56,18 +56,23 @@ function GenerateImageContent() {
       })
       .catch(() => {});
   }, []);
-  // Auto-switch model when persona is selected/deselected
-  useEffect(() => {
-    if (selectedPersona) {
+  function selectPersona(personaId: string | null) {
+    if (personaId) {
+      // Save current model and switch to nano-banana-pro
       if (modelId !== "nano-banana-pro") {
         setPrevModelId(modelId);
-        setModelId("nano-banana-pro");
       }
-    } else if (prevModelId) {
-      setModelId(prevModelId);
-      setPrevModelId(null);
+      setSelectedPersona(personaId);
+      setModelId("nano-banana-pro");
+    } else {
+      // Restore previous model
+      setSelectedPersona(null);
+      if (prevModelId) {
+        setModelId(prevModelId);
+        setPrevModelId(null);
+      }
     }
-  }, [selectedPersona]);
+  }
 
   const startGeneration = useStartGeneration();
   const { activeGenerations } = useGenerationStore();
@@ -203,7 +208,7 @@ function GenerateImageContent() {
                   {personaOpen && (
                     <div className="absolute z-20 bottom-full mb-1 w-full rounded-xl border border-white/[0.08] bg-[#0f1320] backdrop-blur-xl shadow-xl overflow-auto max-h-48">
                       <button
-                        onClick={() => { setSelectedPersona(null); setPersonaOpen(false); }}
+                        onClick={() => { selectPersona(null); setPersonaOpen(false); }}
                         className={cn(
                           "w-full text-left px-3 py-2.5 transition-all cursor-pointer",
                           !selectedPersona ? "bg-amber-500/[0.08] text-amber-400" : "text-slate-400 hover:bg-white/[0.06]"
@@ -218,7 +223,7 @@ function GenerateImageContent() {
                         return (
                           <button
                             key={p.id}
-                            onClick={() => { setSelectedPersona(p.id); setPersonaOpen(false); }}
+                            onClick={() => { selectPersona(p.id); setPersonaOpen(false); }}
                             className={cn(
                               "w-full text-left px-3 py-2.5 transition-all cursor-pointer flex items-center gap-2.5",
                               selectedPersona === p.id ? "bg-amber-500/[0.08] text-amber-400" : "text-white hover:bg-white/[0.06]"
