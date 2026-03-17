@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Image, Sparkles } from "lucide-react";
 
 type ShowcaseItem = {
-  id: number;
+  id: string | number;
   url: string;
   prompt: string;
   model: string;
@@ -68,12 +68,19 @@ export function ShowcaseFeed() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("/api/tv?limit=20&sort=Most Reactions&period=Month");
+        const res = await fetch("/api/tv?limit=40");
         const data = await res.json();
         if (data.items?.length) {
-          const half = Math.ceil(data.items.length / 2);
-          setRow1(data.items.slice(0, half));
-          setRow2(data.items.slice(half));
+          // Deduplicate by URL
+          const seen = new Set<string>();
+          const unique = data.items.filter((item: ShowcaseItem) => {
+            if (seen.has(item.url)) return false;
+            seen.add(item.url);
+            return true;
+          });
+          const half = Math.ceil(unique.length / 2);
+          setRow1(unique.slice(0, half));
+          setRow2(unique.slice(half));
         }
       } finally {
         setLoading(false);
