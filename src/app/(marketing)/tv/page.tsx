@@ -20,7 +20,7 @@ import {
 import { cn } from "@/lib/utils";
 
 type TvItem = {
-  id: number;
+  id: string | number;
   url: string;
   width: number;
   height: number;
@@ -29,6 +29,7 @@ type TvItem = {
   likes: number;
   hearts: number;
   username: string;
+  source?: string;
 };
 
 const SLIDE_DURATION = 7000; // 7 секунд на слайд
