@@ -6,28 +6,33 @@ const LEXICA_API = "https://lexica.art/api/v1/search";
 export const runtime = "nodejs";
 export const revalidate = 300; // кеш 5 минут
 
-// Темы для ротации запросов к Lexica (разный контент каждый раз)
+// Реалистичные темы для Lexica (фото, кино, природа — без аниме)
 const LEXICA_THEMES = [
-  "cinematic portrait 8k",
-  "fantasy landscape epic",
-  "cyberpunk city neon",
-  "beautiful architecture photography",
-  "hyperrealistic animal portrait",
-  "surreal dreamscape art",
-  "underwater ocean scene",
-  "space nebula cosmic",
-  "steampunk mechanical",
-  "japanese garden zen",
-  "northern lights aurora",
-  "medieval castle dark",
-  "retro futurism 80s",
-  "macro photography nature",
-  "abstract fluid art",
-  "winter snow mountain",
-  "tropical paradise sunset",
-  "gothic cathedral interior",
-  "robot android futuristic",
-  "ancient ruins mystical",
+  "cinematic portrait photography 8k",
+  "professional fashion photography studio",
+  "photorealistic landscape golden hour",
+  "urban street photography night neon",
+  "hyperrealistic portrait woman beautiful",
+  "luxury car photography commercial",
+  "food photography professional lighting",
+  "architecture photography modern building",
+  "nature wildlife photography National Geographic",
+  "underwater ocean photography deep blue",
+  "aerial drone photography landscape",
+  "vintage film photography aesthetic",
+  "product photography minimalist",
+  "sports action photography dynamic",
+  "travel photography breathtaking view",
+  "macro photography flowers detailed",
+  "black and white portrait dramatic",
+  "cyberpunk city photorealistic neon rain",
+  "cozy interior design photography warm",
+  "mountain landscape photography epic clouds",
+  "beach sunset photography golden",
+  "forest misty morning photography",
+  "studio portrait lighting Rembrandt",
+  "night sky astrophotography stars",
+  "snow winter landscape photography",
 ];
 
 // Параметры ротации для Civitai (разные сортировки/периоды)
@@ -148,13 +153,13 @@ export async function GET(request: Request) {
 
     // Pick random Civitai variant for diversity
     const civVariant = CIVITAI_VARIANTS[Math.floor(Math.random() * CIVITAI_VARIANTS.length)];
-    // Pick 2-3 random Lexica themes
+    // Pick 5-6 random Lexica themes for variety (80% of content)
     const shuffledThemes = shuffle(LEXICA_THEMES);
-    const lexicaThemes = shuffledThemes.slice(0, 3);
+    const lexicaThemes = shuffledThemes.slice(0, 6);
 
-    // Fetch from multiple sources in parallel
+    // Fetch from multiple sources in parallel (Lexica 80%, Civitai 20%)
     const [civitaiResult, ...lexicaResults] = await Promise.all([
-      fetchCivitai(Math.ceil(limit * 0.6), civVariant.sort, civVariant.period, cursor),
+      fetchCivitai(Math.ceil(limit * 0.2), civVariant.sort, civVariant.period, cursor),
       ...lexicaThemes.map((theme) => fetchLexica(theme, Math.ceil(limit * 0.15))),
     ]);
 
